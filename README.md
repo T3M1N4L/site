@@ -6,14 +6,14 @@
 
 
 
-Personal site/portfolio/blog, built with [Bun](https://bun.sh/) and [SCSS](https://tailwindcss.com/), and hosted on [Github Pages](https://hackclub.app/)! ft. aesthetic, and a responsive, mobile-friendly design. Built my own SSG to build the website to go with it!
+Personal site/portfolio/blog, built with [Bun](https://bun.sh/) and [SCSS](https://tailwindcss.com/), and hosted on [Cloudflare Pages](https://pages.cloudflare.com/)! ft. aesthetic, and a responsive, mobile-friendly design. Built my own SSG to build the website to go with it!
 
 
 ## Development
 
 1. Clone the source code to your device
 ```sh
-git clone https://github.com/T3M1N4L/t3m1n4l.github.io
+git clone https://github.com/T3M1N4L/site
 ```
 
 2. Install the project's dependencies

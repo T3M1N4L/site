@@ -187,7 +187,7 @@ export default defineConfig({
 ${figlet.textSync("t3rm1n4l", { font: "Small Slant" })}
 ${dedent`
   this HTML file was generated from "${filename}" using my own SSG!
-  check out the source code at: https://github.com/T3M1N4L/t3m1n4l.github.io
+  check out the source code at: https://github.com/T3M1N4L/site
 `}
 -->\n`;
 
