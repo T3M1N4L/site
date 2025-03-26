@@ -24,7 +24,7 @@
         "marked": "^14.1.4",
         "node-emoji": "^2.2.0",
         "prettier": "^3.5.3",
-        "sass": "^1.85.1",
+        "sass": "^1.86.0",
         "serve-handler": "^6.1.6",
         "twemoji": "^14.0.2",
         "yaml": "^2.7.0"
