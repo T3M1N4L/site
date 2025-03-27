@@ -29,5 +29,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
-          git commit -m "chore(deps): bump dependencies" || echo "No changes to commit"
+          git commit -m "bump dependencies [skip ci]" || echo "No changes to commit"
           git push
