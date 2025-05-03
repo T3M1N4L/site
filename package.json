@@ -18,7 +18,7 @@
         "@prettier/plugin-xml": "^3.4.1",
         "chokidar": "^3.6.0",
         "clean-css": "^5.3.3",
-        "dedent": "^1.5.3",
+        "dedent": "^1.6.0",
         "figlet": "^1.8.1",
         "lodash": "^4.17.21",
         "marked": "^14.1.4",
