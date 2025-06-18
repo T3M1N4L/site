@@ -5,7 +5,7 @@
     "devDependencies": {
         "@types/clean-css": "^4.2.11",
         "@types/figlet": "^1.7.0",
-        "@types/lodash": "^4.17.17"
+        "@types/lodash": "^4.17.18"
     },
     "peerDependencies": {
         "typescript": "^5.5.4"
@@ -24,7 +24,7 @@
         "marked": "^14.1.4",
         "node-emoji": "^2.2.0",
         "prettier": "^3.5.3",
-        "sass": "^1.89.1",
+        "sass": "^1.89.2",
         "serve-handler": "^6.1.6",
         "twemoji": "^14.0.2",
         "yaml": "^2.8.0"
