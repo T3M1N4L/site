@@ -1,6 +1,6 @@
 ---
 title: Home
-description: i'm a 14-year-old developer who works on frontend projects and has been programming for 5 years.
+description: i'm a 14-year-old developer who works on frontend projects and has been programming for 6 years.
 color: lavender
 
 styles:
