@@ -22,10 +22,9 @@ styles:
     </span>
   </h1>
   <div style="position:relative;z-index:10;">
-    <span class="chip">:computer: developer</span>
     <span class="chip">:bust_in_silhouette: he/him</span>
-    <span class="chip">:sleeping: sleep deprived</span>
-    <span class="chip">:us: en_US</span>
+    <span class="chip">:yawning_face: t3rm1n4l@fent</span>
+    <span class="chip">:us: en_US.UTF-8</span>
   </div>
   <div class="blur"></div>
 </div>
@@ -33,7 +32,7 @@ styles:
 ## about me
 
 i'm a 14-year-old dev who does (mostly) frontend projects...
-over around 5 years i learnt ~~typescript~~ css, and js skills.
+over around 6 years i learnt html, css, and js skills.
 i'm also currently learning typescript, c++, and perfecting my skills in js as of now!
 i try to make eveyerthing i have amoled (fully black) themed :sunglasses:
 
@@ -44,20 +43,20 @@ i try to make eveyerthing i have amoled (fully black) themed :sunglasses:
     <h3>portfolio website</h3>
     <p>this very cool site</p>
   </project-card>
+  
+  <project-card onclick="window.open('https://github.com/T3M1N4L/rigtools-updated-ui')" style="--color:var(--peach);">
+    <h3>rigtools updated ui</h3>
+    <p>an updated version of a devtools exploit with a better ui</p>
+  </project-card>
 
-  <project-card onclick="window.open('https://expl-dump.t3rm1n4l.dev/')" style="--color:var(--peach);">
+  <project-card onclick="window.open('https://expl-dump.t3rm1n4l.dev/')" style="--color:var(--yellow);">
     <h3>exploit dump</h3>
     <p>a (chromebook/cros) exploit dump</p>
   </project-card>
 
-  <project-card onclick="window.open('https://cat-ninja.t3rm1n4l.dev/')" style="--color:var(--yellow);">
-    <h3>cat ninja</h3>
-    <p>a website to play catninja and it's other romhacks</p>
-  </project-card>
-
-  <project-card onclick="window.open('https://github.com/T3M1N4L/rigtools-updated-ui')" style="--color:var(--green);">
-    <h3>rigtools updated ui</h3>
-    <p>an updated version of a devtools exploit with a better ui</p>
+  <project-card onclick="window.open('https://github.com/t3m1n4l/vizmote/')" style="--color:var(--green);">
+    <h3>vizmote</h3>
+    <p>a tui/webgui remote to control yout vizio tvs</p>
   </project-card>
 
   <project-card onclick="window.open('https://vimstart.t3rm1n4l.dev/')" style="--color:var(--teal);">
