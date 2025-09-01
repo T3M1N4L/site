@@ -23,7 +23,7 @@ styles:
   </h1>
   <div style="position:relative;z-index:10;">
     <span class="chip">:bust_in_silhouette: he/him</span>
-    <span class="chip">:bored: t3rm1n4l@fent</span>
+    <span class="chip">:yawn: t3rm1n4l@fent</span>
     <span class="chip">:us: en_US.UTF-8</span>
   </div>
   <div class="blur"></div>
