@@ -16,9 +16,3 @@ styles:
 * <a class="no-style socials fli" href="https://turbowarp.t3rm1n4l.dev/">turbowarp.</a>
 * <a class="no-style socials fli" href="https://forkphorus.t3rm1n4l.dev/">forkphorus.</a>
 * <a class="no-style socials fli" href="/404/">/404</a>
-
-## github pages deployments (useful ones)
-* <a class="no-style socials fli" href="/site-fonts/">/site-fonts</a>
-* <a class="no-style socials fli" href="/password-gen/">/password-gen</a>
-* <a class="no-style socials fli" href="/facilis/">/facilis</a>
-* <a class="no-style socials fli" href="/cps/">/cps</a>
