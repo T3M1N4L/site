@@ -14,7 +14,7 @@ styles:
 * <a class="no-style socials fli" href="https://github.com/T3M1N4L/">Github</a>
   - T3M1N4L
   - make sure to check out my readme, and give a follow please :pray:
-* E-mail: [contact@t3rm1n4l.dev](mailto:contact@t3rm1n4l.dev)
+* E-mail: [t3rm1n4l@duck.com](mailto:t3rm1n4l@duck.com)
   - i might be slow to respond :man_shrugging: , forwarded to my proton mail
 * <a class="no-style socials fli" href="https://x.com/t3rm1n4l_dev">Twitter</a>
   - @t3rm1n4l_dev
