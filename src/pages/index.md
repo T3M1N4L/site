@@ -32,11 +32,11 @@ styles:
 ## about me
 
 i'm a 14-year-old dev who does (mostly) frontend projects...
-over around 6 years i learnt html, css, and js skills.
+over around 6 years ago i learnt html, css, and js skills.
 i'm also currently learning typescript, c++, and perfecting my skills in js as of now!
 i try to make eveyerthing i have amoled (fully black) themed :sunglasses:
 
-## projects
+## /projects
 
 <projects-container>
   <project-card onclick="window.open('https://t3rm1n4l.dev')" style="--color:var(--red);">
