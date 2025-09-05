@@ -10,7 +10,7 @@ styles:
 # socials
 * <a class="no-style socials fli" href="https://discord.com/users/861917446750863402">Discord</a>
   - @t3rm1n4l_
-  - use this becuase i'm on discord the most (im not a discord mod, ong :sob:)
+  - use this to contact me, i'll prolly check this more often than email
 * <a class="no-style socials fli" href="https://github.com/T3M1N4L/">Github</a>
   - T3M1N4L
   - make sure to check out my readme, and give a follow please :pray:
