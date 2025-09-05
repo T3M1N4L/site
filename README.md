@@ -1,4 +1,4 @@
-# t3rm1n4l's personal site
+# t3rm1n4l's personal site 
 
 <a href="https://t3rm1n4l.dev">
   <img src="./public/img/preview.webp" alt="Aesthetically pleasing preview">
