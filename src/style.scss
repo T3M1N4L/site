@@ -136,6 +136,18 @@ body {
     display: inline-block;
     animation: hover 2s infinite ease-in-out alternate;
     transform: translateY(5px);
+    transition: scale .5s var(--bounce), margin .25s var(--bounce);
+    cursor: zoom-in;
+    user-select: none;
+
+    &:hover {
+      scale: 1.2;
+      margin: 0 3px;
+    }
+
+    &:active {
+      scale: 0.95;
+    }
 
     @for $i from 1 through 26 {
       &.letter:nth-child(#{$i}) {

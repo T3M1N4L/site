@@ -49,10 +49,7 @@
           </a><code style="font-size:15px;">v<!-- variable:version --></code>
           <br/>
           <!-- prettier-ignore -->
-          <small><a href="https://github.com/T3M1N4L/site/commit/<!-- variable:commit-hash -->"><!-- variable:commit-hash-short --></a> - <!-- variable:commit-message --></small>
-          <br/>
-          <small><!-- variable:commit-date --></small>
-          <br/><br/>
+          <small><a href="https://github.com/T3M1N4L/site/commit/<!-- variable:commit-hash -->"><!-- variable:commit-hash-short --></a> - <!-- variable:commit-message --></small><br/>
           <yescript>
             <button onclick="toggleUwU()">
               uwu mode
@@ -105,7 +102,7 @@
     <footer>
       <div class="inner">
         <div>
-          <h4 style="margin: 0;">&copy; 2024-2025 t3rm1n4l</h4>
+          <h4 style="margin: 0;">&copy; <span id="copyright-year"></span> t3rm1n4l</h4>
           <p style="margin: 0;">made with bun, ts, and :sparkling_heart: | this is a <strong><blink>&lt;/blink&gt;</blink> free zone</strong></p>
           <p style="margin: 0;">last commit hash: <code style="user-select: all;"><!-- variable:commit-hash --></code> </p>
           <div id="konami">
@@ -119,10 +116,18 @@
             <kbd id="k7">→</kbd>
             <kbd id="k8">b</kbd>
             <kbd id="k9">a</kbd>
-            <a id="lazy" class="no-style socials">I'm lazy</a>
+            <a id="lazy" class="no-style socials">too lazy?</a>
           </div>
         </div>
       </div>
     </footer>
+    <script>
+      // Set dynamic copyright year
+      document.addEventListener("DOMContentLoaded", function() {
+        const currentYear = new Date().getFullYear();
+        const nextYear = currentYear + 1;
+        document.getElementById("copyright-year").textContent = currentYear + "-" + nextYear;
+      });
+    </script>
   </body>
 </html>

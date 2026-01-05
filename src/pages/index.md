@@ -31,12 +31,29 @@ styles:
 
 ## about me
 
-i'm a 14-year-old dev who does (mostly) frontend projects...
+i'm a <code id="age">14</code> year old dev who does (mostly) frontend projects...
 over around 6 years ago i learnt html, css, and js skills.
 i'm also currently learning typescript, c++, and perfecting my skills in js as of now!
 i try to make eveyerthing i have amoled (fully black) themed :sunglasses:
 
-## /projects
+<script>
+  const BIRTH_TIMESTAMP = 1301324179000; 
+  
+  function updateAge() {
+    const ageEl = document.getElementById("age");
+    if (!ageEl) return;
+    
+    const now = Date.now();
+    const ageInYears = (now - BIRTH_TIMESTAMP) / (1000 * 60 * 60 * 24 * 365.25);
+    
+    ageEl.textContent = ageInYears.toFixed(8);
+  }
+
+  updateAge();
+  setInterval(updateAge, 10);
+</script>
+
+## projects
 
 <projects-container>
   <project-card onclick="window.open('https://t3rm1n4l.dev')" style="--color:var(--red);">
