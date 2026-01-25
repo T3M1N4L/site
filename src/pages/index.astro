@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
+import ButtonCarousel from '../components/ButtonCarousel.astro';
 import { parseEmojis } from '../utils/emoji';
 
 const title = 'Home';
@@ -13,6 +14,19 @@ const chipEmojis = {
   us: parseEmojis(':us:'),
   sunglasses: parseEmojis(':sunglasses:')
 };
+
+const interestButtons = [
+  { id: 1, label: 'vex robotics' },
+  { id: 2, label: 'web design' },
+  { id: 3, label: 'anime' },
+  { id: 4, label: 'music' },
+  { id: 5, label: 'internet freedom' },
+  { id: 6, label: 'gaming' },
+  { id: 7, label: 'pokemon' },
+  { id: 8, label: 'graphic design' },
+  { id: 9, label: 'piracy' },
+  { id: 10, label: 'open source'},
+];
 ---
 
 <Layout title={title} description={description} color={color}>
@@ -53,12 +67,18 @@ const chipEmojis = {
       const now = Date.now();
       const ageInYears = (now - BIRTH_TIMESTAMP) / (1000 * 60 * 60 * 24 * 365.25);
       
-      ageEl.textContent = ageInYears.toFixed(8);
+      ageEl.textContent = ageInYears.toFixed(15);
     }
 
     updateAge();
-    setInterval(updateAge, 10);
+    setInterval(updateAge, 1);
   </script>
+
+  <h2>interests & hobbies</h2>
+  
+  <p>here are some things i'm passionate about and enjoy working on in my free time:</p>
+  
+  <ButtonCarousel buttons={interestButtons} />
 
   <h2>projects</h2>
 

@@ -1,0 +1,173 @@
+---
+interface Button {
+  id: number;
+  label: string;
+}
+
+interface Props {
+  buttons: Button[];
+}
+
+const { buttons } = Astro.props;
+---
+
+<div class="button-carousel">
+  <div class="buttons-container">
+    <div class="button-row">
+      {buttons.map((button) => (
+        <div class="button-wrapper">
+          <span class="web-button">
+            {button.label}
+          </span>
+        </div>
+      ))}
+    </div>
+    <div class="button-row">
+      {buttons.map((button) => (
+        <div class="button-wrapper">
+          <span class="web-button">
+            {button.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="fade-left"></div>
+  <div class="fade-right"></div>
+</div>
+
+<style>
+  .button-carousel {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 1rem 0;
+    position: relative;
+  }
+
+  .buttons-container {
+    height: max(50px, 4rem);
+    display: flex;
+    align-items: center;
+    transition: transform 0.4s linear;
+  }
+
+  .buttons-container:hover .button-row,
+  .buttons-container:hover .web-button {
+    animation-play-state: paused;
+  }
+
+  .button-row {
+    display: inline-flex;
+    flex-direction: row;
+    white-space: nowrap;
+    gap: 0.75rem;
+    padding-right: 0.75rem;
+    flex-wrap: nowrap;
+    animation: move 15s linear infinite;
+    animation-fill-mode: both;
+  }
+
+  .button-wrapper {
+    animation: groove 2s cubic-bezier(0.3, 0, 0.7, 0.9) infinite;
+  }
+
+  .button-wrapper:nth-child(2n) {
+    animation-delay: 1s !important;
+  }
+
+  .web-button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: oklch(var(--base));
+    color: oklch(var(--text));
+    text-decoration: none;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border: 1px solid oklch(var(--surface1));
+    min-height: 31px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    transform-origin: center;
+    transition: transform 0.5s var(--bounce);
+  }
+
+  .web-button:hover {
+    transform: scale(1.05);
+    z-index: 5;
+  }
+
+  @keyframes groove {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(max(7.75px, 0.625rem));
+    }
+  }
+
+  .fade-left,
+  .fade-right {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 60px;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .fade-left {
+    left: 0;
+    background: linear-gradient(to right, oklch(var(--base)), transparent);
+  }
+
+  .fade-right {
+    right: 0;
+    background: linear-gradient(to left, oklch(var(--base)), transparent);
+  }
+
+  @media (prefers-reduced-motion: reduce) or (orientation: portrait) {
+    .button-carousel {
+      white-space: initial;
+    }
+
+    .button-row,
+    .web-button {
+      display: flex;
+      flex-wrap: wrap;
+      white-space: initial;
+      animation: none;
+    }
+
+    .button-row:nth-of-type(2) {
+      display: none;
+    }
+
+    .buttons-container {
+      height: initial;
+    }
+  }
+
+  @keyframes move {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  @keyframes groove {
+    0% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(max(7.75px, 0.625rem));
+    }
+  }
+</style>

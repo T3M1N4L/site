@@ -42,4 +42,3 @@ this is astro ssr btw for faster load times
 - [ ] remove socials page and integrate it into main page
 - [ ] background effects
 - [ ] astro transitions
-- [ ] intrests carousel

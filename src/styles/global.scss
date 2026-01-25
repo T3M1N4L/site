@@ -170,6 +170,18 @@ body {
   display: inline-block;
   background: oklch(var(--surface0) / 0.3);
   border: 1px solid oklch(100% 0 0 / 0.2);
+  transition: all 0.5s var(--bounce);
+  transform-origin: center;
+  cursor: pointer;
+  
+  &:hover {
+    transform: scale(1.05) perspective(1000px) rotateX(25deg);
+    background: oklch(var(--surface0) / 0.5);
+    border: 1px solid oklch(var(--lavender) / 0.4);
+    box-shadow: 
+      0 10px 25px oklch(var(--surface0) / 0.3),
+      0 5px 15px oklch(var(--lavender) / 0.2);
+  }
 }
 
 .blur {
