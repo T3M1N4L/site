@@ -2,6 +2,3 @@ name = "t3rm1n4l-site"
 compatibility_date = "2026-01-25"
 pages_build_output_dir = "./dist"
 compatibility_flags = ["nodejs_compat"]
-
-[build]
-command = "bun run build"
