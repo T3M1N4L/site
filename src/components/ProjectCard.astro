@@ -1,0 +1,15 @@
+---
+interface Props {
+  title: string;
+  desc: string;
+  link: string;
+  color: string;
+}
+
+const { title, desc, link, color } = Astro.props;
+---
+
+<project-card onclick={`window.open('${link}')`} style={`--color:var(--${color});`}>
+  <h3>{title}</h3>
+  <p>{desc}</p>
+</project-card>

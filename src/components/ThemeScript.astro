@@ -1,0 +1,29 @@
+---
+---
+
+<script is:inline>
+  document.body.setAttribute('class', window.localStorage.getItem("theme") || '');
+
+  function updateThemeClass() {
+      const theme = window.localStorage.getItem("theme") || '';
+      const retro = window.localStorage.getItem("retro") === "true" ? "retro" : "";
+      document.body.setAttribute('class', `${theme} ${retro}`.trim());
+  }
+
+  function toggleUwU() {
+      window.localStorage.setItem("theme", 'UwU');
+      updateThemeClass();
+  }
+
+  function toggleMonospace() {
+      window.localStorage.setItem("theme", 'monospace');
+      updateThemeClass();
+  }
+
+  function toggleNormal() {
+      window.localStorage.setItem("theme", '');
+      updateThemeClass();
+  }
+
+  document.addEventListener("DOMContentLoaded", updateThemeClass);
+</script>

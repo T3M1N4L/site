@@ -1,0 +1,49 @@
+---
+import { getGitInfo, getGitHashShort } from '../utils/git';
+import { parseEmojis } from '../utils/emoji';
+import navItems from '../nav';
+
+const packageJson = await import('../../package.json');
+const version = packageJson.version;
+
+const gitInfo = getGitInfo();
+const commitHashShort = getGitHashShort();
+
+const navigationHtml = navItems.map(({ title, link, emoji }) => {
+  const parsedEmoji = parseEmojis(emoji);
+  return `<a href="${link}" class="no-style"><button>${parsedEmoji} ${title}</button></a>`;
+}).join('');
+---
+
+<nav>
+  <div class="inner">
+    <div style="max-width: 490px;">
+      <a href="/" class="no-style">
+        <h1 style="margin:0;font-size:2.5em;" class="navtitle">t3rm1n4l</h1>
+      </a><code style="font-size:15px;">v{version}</code>
+      <br/>
+      <small><a href={`https://github.com/T3M1N4L/site/commit/${gitInfo.commitHash}`}>{commitHashShort}</a> - {gitInfo.commitMessage}</small><br/>
+      <yescript>
+        <button onclick="toggleUwU()">
+          uwu mode
+        </button>
+        <button onclick="toggleMonospace()">
+          monospace mode
+        </button>
+        <button onclick="toggleNormal()">
+          normal
+        </button>
+      </yescript>
+    </div>
+    <div class="nav">
+      <Fragment set:html={navigationHtml} />
+      <br/>
+    </div>
+  </div>
+</nav>
+
+<style>
+  yescript {
+    display: contents;
+  }
+</style>

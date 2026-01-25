@@ -1,0 +1,54 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import ThemeScript from '../components/ThemeScript.astro';
+import { colors, getNextInObj } from '../utils/colors';
+import '../styles/global.scss';
+import type { MarkdownLayoutProps } from 'astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  color?: string;
+}
+
+const frontmatter = (Astro.props as MarkdownLayoutProps<Props>).frontmatter || {};
+const { 
+  title = frontmatter.title || 'Home',
+  description = frontmatter.description || "i'm a 14-year-old developer who works on frontend projects and has been programming for 6 years.",
+  color = frontmatter.color || 'lavender'
+} = Astro.props;
+
+const colorValue = colors[color as keyof typeof colors] || colors.lavender;
+const color2Name = getNextInObj(colors, color as keyof typeof colors);
+const color2Value = colors[color2Name];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <BaseHead title={title} description={description} color={color} />
+    <style is:inline set:html={`:root{--color:var(--${color});--color2:var(--${color2Name})}`}>
+    </style>
+  </head>
+  <body>
+    <ThemeScript />
+    <noscript style="padding: 10px;text-align: center;">
+      <b>heads up! looks like you have JavaScript disabled... some parts of the site will be unavaliable to you.</b>
+    </noscript>
+    
+    <Nav />
+    
+    <div id="content">
+      <div class="inner">
+        <slot />
+      </div>
+    </div>
+    
+    <Footer />
+    
+    <script is:inline src="/konami.js"></script>
+    <script is:inline src="/oneko.js"></script>
+  </body>
+</html>

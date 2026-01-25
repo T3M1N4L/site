@@ -1,0 +1,45 @@
+---
+import { colors } from '../utils/colors';
+import favicon96 from '../assets/favicon-96x96.png';
+import faviconSvg from '../assets/favicon.svg';
+import appleTouchIcon from '../assets/apple-touch-icon.png';
+import catImage from '../assets/cat.png';
+
+interface Props {
+  title?: string;
+  description?: string;
+  color?: string;
+}
+
+const { 
+  title = '', 
+  description = "i'm a 14-year-old developer who works on frontend projects and has been programming for 6 years.",
+  color = 'lavender'
+} = Astro.props;
+
+const colorValue = colors[color as keyof typeof colors] || colors.lavender;
+---
+
+<meta charset="UTF-8" />
+<link rel="icon" type="image/png" href={favicon96.src} sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href={faviconSvg.src} />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+<meta name="apple-mobile-web-app-title" content="t3rm1n4l" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta property="og:image" content={catImage.src}/>
+
+<title>{title && title !== 'Home' ? `${title} | t3rm1n4l` : 't3rm1n4l'}</title>
+
+<meta name="theme-color" content={colorValue} />
+<meta name="description" content={description} />
+<meta name="language" content="English">
+<meta name="robots" content="noarchive">
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+<link rel="preconnect" href="https://fonts.t3rm1n4l.dev" crossorigin="anonymous" />
+<link rel="preload" href="https://fonts.t3rm1n4l.dev/fonts.css" as="style"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://fonts.t3rm1n4l.dev/fonts.css"/>

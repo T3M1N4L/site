@@ -1,0 +1,39 @@
+---
+import { getGitInfo } from '../utils/git';
+
+const gitInfo = getGitInfo();
+---
+
+<footer>
+  <div class="inner">
+    <div>
+      <h4 style="margin: 0;">&copy; <span id="copyright-year"></span> t3rm1n4l</h4>
+      <p style="margin: 0;">made with bun, and astro | this is a <strong><blink>&lt;/blink&gt;</blink> free zone</strong></p>
+      <p style="margin: 0;">last commit hash: <code style="user-select: all;">{gitInfo.commitHash}</code> </p>
+      <div id="konami">
+        <kbd id="k0">↑</kbd>
+        <kbd id="k1">↑</kbd>
+        <kbd id="k2">↓</kbd>
+        <kbd id="k3">↓</kbd>
+        <kbd id="k4">←</kbd>
+        <kbd id="k5">→</kbd>
+        <kbd id="k6">←</kbd>
+        <kbd id="k7">→</kbd>
+        <kbd id="k8">b</kbd>
+        <kbd id="k9">a</kbd>
+        <a id="lazy" class="no-style socials">too lazy?</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function() {
+    const currentYear = new Date().getFullYear();
+    const nextYear = currentYear + 1;
+    const copyrightEl = document.getElementById("copyright-year");
+    if (copyrightEl) {
+      copyrightEl.textContent = currentYear + "-" + nextYear;
+    }
+  });
+</script>

@@ -1,0 +1,35 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import { parseEmojis } from '../../utils/emoji';
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  
+  return posts.map(post => {
+    const slug = post.id.replace('.md', '');
+    
+    return {
+      params: { slug },
+      props: { post }
+    };
+  });
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout 
+  title={post.data.title} 
+  description={post.data.description}
+  color={post.data.color}
+>
+  <h1>{post.data.title}</h1>
+  <small>{post.data.date} | {post.data.description}</small>
+  <hr/>
+  
+  <Content />
+</Layout>

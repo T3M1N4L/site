@@ -1,0 +1,109 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { parseEmojis } from '../utils/emoji';
+
+const title = 'Home';
+const description = "i'm a 14-year-old developer who works on frontend projects and has been programming for 6 years.";
+const color = 'lavender';
+
+const chipEmojis = {
+  bust: parseEmojis(':bust_in_silhouette:'),
+  sleeping: parseEmojis(':sleeping:'),
+  us: parseEmojis(':us:'),
+  sunglasses: parseEmojis(':sunglasses:')
+};
+---
+
+<Layout title={title} description={description} color={color}>
+  <div style="text-align:center;position:relative;margin: 120px 0;">
+    <h1 style="position:relative;z-index:10;font-size: 3.2em;margin:15px 0;">
+      hi, i'm <span class="letters">
+        <span class="letter">t</span>
+        <span class="letter">3</span>
+        <span class="letter">r</span>
+        <span class="letter">m</span>
+        <span class="letter">1</span>
+        <span class="letter">n</span>
+        <span class="letter">4</span>
+        <span class="letter">l</span>
+        <span class="period">.</span>
+      </span>
+    </h1>
+    <div style="position:relative;z-index:10;">
+      <span class="chip"><Fragment set:html={chipEmojis.bust} /> he/him</span>
+      <span class="chip"><Fragment set:html={chipEmojis.sleeping} /> t3rm1n4l@fent</span>
+      <span class="chip"><Fragment set:html={chipEmojis.us} /> en_US.UTF-8</span>
+    </div>
+    <div class="blur"></div>
+  </div>
+
+  <h2>about me</h2>
+
+  <p>i'm a <code id="age">14</code> year old fullstack dev who does (mostly) frontend projects...
+  i love css, web design, and making things look nice and clean, im perfecting my skills in oop. also, i try to make eveyerthing i have amoled (fully black) themed</p>
+
+  <script>
+    const BIRTH_TIMESTAMP = 1301324179000; 
+    
+    function updateAge() {
+      const ageEl = document.getElementById("age");
+      if (!ageEl) return;
+      
+      const now = Date.now();
+      const ageInYears = (now - BIRTH_TIMESTAMP) / (1000 * 60 * 60 * 24 * 365.25);
+      
+      ageEl.textContent = ageInYears.toFixed(8);
+    }
+
+    updateAge();
+    setInterval(updateAge, 10);
+  </script>
+
+  <h2>projects</h2>
+
+  <projects-container>
+    <ProjectCard 
+      title="portfolio website"
+      desc="this very cool site"
+      link="https://t3rm1n4l.dev"
+      color="red"
+    />
+    
+    <ProjectCard 
+      title="rigtools updated ui"
+      desc="an updated version of a devtools exploit with a better ui"
+      link="https://github.com/T3M1N4L/rigtools-updated-ui"
+      color="peach"
+    />
+
+    <ProjectCard 
+      title="exploit dump"
+      desc="a (chromebook/cros) exploit dump"
+      link="https://expl-dump.t3rm1n4l.dev/"
+      color="yellow"
+    />
+
+    <ProjectCard 
+      title="vizmote"
+      desc="a tui/webgui remote to control yout vizio tvs"
+      link="https://github.com/t3m1n4l/vizmote/"
+      color="green"
+    />
+
+    <ProjectCard 
+      title="vimstart"
+      desc="an interesting homepage"
+      link="https://vimstart.t3rm1n4l.dev/"
+      color="teal"
+    />
+
+    <ProjectCard 
+      title="amoled-comfy"
+      desc="a fork of a discord-client theme with automatic updates"
+      link="https://github.com/t3m1n4l/AMOLED-comfy/"
+      color="blue"
+    />
+  </projects-container>
+  <br/>
+</Layout>

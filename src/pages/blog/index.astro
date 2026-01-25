@@ -1,0 +1,32 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export const prerender = true;
+
+const posts = await getCollection('blog');
+
+const sortedPosts = posts.sort((a, b) => {
+  return b.id.localeCompare(a.id);
+});
+
+const parseFilename = (filename: string) => 
+  filename.replace(/\[.*?\] /g, '').replaceAll(" ", "-").replace('.md', '');
+---
+
+<Layout title="Blog" description="my ultra super-duper cool blog where i yap and ramble about various things!!" color="mauve">
+  <h1>yapping</h1>
+  <p>my ultra super-duper cool blog where i yap and ramble about various stuff!!</p>
+
+  <div style="display: flex;flex-direction:column;gap:10px;">
+    {sortedPosts.map(post => (
+      <a href={`/blog/${parseFilename(post.id)}`} class="no-style">
+        <button class="big" style={`background:var(--surface0);width:100%;padding:10px;text-align:left;--color:var(--${post.data.color});`}>
+          <h2 style="margin: 0;margin-bottom:5px;">{post.data.title}</h2>
+          <p style="margin:0;padding-bottom:5px;">{post.data.description}</p>
+          <small>{post.data.date}</small>
+        </button>
+      </a>
+    ))}
+  </div>
+</Layout>

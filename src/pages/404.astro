@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = "404: Not Found";
+const description = "looks like u got lost... nya!";
+const color = "red";
+---
+
+<Layout title={title} description={description} color={color}>
+  <div style="text-align:center;margin-top: 100px;">
+    <textarea readonly rows="5" cols="12" style="width:max-content;padding-top:1em;overflow-y:hidden;margin:0 auto;display:block;" onclick="this.select()">
+   ╱|、
+  (˚ˎ 。7
+  |、˜〵
+  じしˍ,)ノ
+    </textarea>
+
+    <h1>404: Not Found</h1>
+
+    <p>looks like u got lost... uh oh!</p>
+
+    <a href="/">go back home</a>
+  </div>
+</Layout>
