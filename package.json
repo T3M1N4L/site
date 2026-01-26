@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/generate-git.cjs",
     "build": "astro build",
+    "postbuild": "node scripts/write-assetsignore.cjs",
     "preview": "astro preview"
   },
   "dependencies": {

@@ -1,9 +1,5 @@
 ---
 import { colors } from '../utils/colors';
-import favicon96 from '../assets/favicon-96x96.png';
-import faviconSvg from '../assets/favicon.svg';
-import appleTouchIcon from '../assets/apple-touch-icon.png';
-import catImage from '../assets/cat.png';
 
 interface Props {
   title?: string;
@@ -21,14 +17,14 @@ const colorValue = colors[color as keyof typeof colors] || colors.lavender;
 ---
 
 <meta charset="UTF-8" />
-<link rel="icon" type="image/png" href={favicon96.src} sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href={faviconSvg.src} />
+<link rel="icon" type="image/png" href="/img/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg" />
 <link rel="shortcut icon" href="/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href={appleTouchIcon.src} />
+<link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png" />
 <meta name="apple-mobile-web-app-title" content="t3rm1n4l" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta property="og:image" content={catImage.src}/>
+<meta property="og:image" content="/img/cat.png"/>
 
 <title>{title && title !== 'Home' ? `${title} | t3rm1n4l` : 't3rm1n4l'}</title>
 

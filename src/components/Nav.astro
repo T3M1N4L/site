@@ -1,13 +1,12 @@
 ---
-import { getGitInfo, getGitHashShort } from '../utils/git';
+import gitInfo from '../generated/git.json' assert { type: 'json' };
 import { parseEmojis } from '../utils/emoji';
 import navItems from '../nav';
 
 const packageJson = await import('../../package.json');
 const version = packageJson.version;
 
-const gitInfo = getGitInfo();
-const commitHashShort = getGitHashShort();
+const commitHashShort = gitInfo.commitHash ? gitInfo.commitHash.slice(0,7) : '';
 
 const navigationHtml = navItems.map(({ title, link, emoji }) => {
   const parsedEmoji = parseEmojis(emoji);

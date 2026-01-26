@@ -1,4 +1,20 @@
-name = "t3rm1n4l-site"
+name = "terminal-site"
 compatibility_date = "2026-01-25"
-pages_build_output_dir = "./dist"
+# If you prefer, set your account id here (or pass CF_ACCOUNT_ID env when running wrangler):
+# account_id = "<YOUR_ACCOUNT_ID>"
+
+# Worker entry produced by the Astro Cloudflare adapter
+main = "./dist/_worker.js/index.js"
+
+# Serve static assets bundled in `dist/` via the ASSETS binding
+assets = { binding = "ASSETS", directory = "./dist" }
+
 compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "bun run build"
+
+# Optional: if you use KV for sessions add a kv_namespaces entry with the real id
+# [[kv_namespaces]]
+# binding = "SESSION"
+# id = "<YOUR_KV_NAMESPACE_ID>"

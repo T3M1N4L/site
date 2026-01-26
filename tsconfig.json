@@ -3,18 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/assets/*": ["./src/assets/*"]
-    },
-    "types": ["astro/client"],
-    "allowJs": true,
-    "checkJs": false,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "noEmit": true
-  },
-  "include": [
-    "src/**/*",
-    ".astro/types.d.ts"
-  ]
+      "@/*": ["./src/*"]
+    }
+  }
 }
