@@ -2,32 +2,22 @@
 .vscode/
 .idea/
 
-# Node modules
 node_modules/
 
-# Build outputs
 /dist/
 /.cache/
 /.astro/
-
-# Astro/Vite cache
 /.vite/
 
-# Environment files
 .env
 .env.*
 
-# Logs
 logs/
 
-# OS files
 Thumbs.db
 
-# TypeScript
 *.tsbuildinfo
 
-# Coverage
 coverage/
 
-# Misc
 *.tgz
