@@ -208,23 +208,23 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
+  will-change: transform;
+  transform: translateZ(0);
 
   background: linear-gradient(
     90deg,
     oklch(var(--color) / 0.02),
     oklch(var(--color2) / 0.02)
   );
-  backdrop-filter: blur(20px);
-  box-shadow: 0 5px 10px oklch(var(--base) / 0.5);
 
   &::after {
     content: "";
     position: absolute;
     background: linear-gradient(
       90deg,
-      transparent 25%,
+      oklch(var(--color) / 0) 25%,
       oklch(var(--color) / 1) 50%,
-      transparent 75%
+      oklch(var(--color) / 0) 75%
     );
     width: 100%;
     height: 1px;
@@ -258,13 +258,13 @@ nav {
 footer {
   margin-top: 50px;
   padding: 2rem 0;
+  will-change: transform;
+  transform: translateZ(0);
   background: linear-gradient(
     90deg,
     oklch(var(--color) / 0.02),
     oklch(var(--color2) / 0.02)
   );
-  backdrop-filter: blur(20px);
-  box-shadow: 0 -5px 10px oklch(var(--base) / 0.5);
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
@@ -274,9 +274,9 @@ footer {
     position: absolute;
     background: linear-gradient(
       90deg,
-      transparent 25%,
+      oklch(var(--color) / 0) 25%,
       oklch(var(--color) / 1) 50%,
-      transparent 75%
+      oklch(var(--color) / 0) 75%
     );
     width: 100%;
     height: 1px;

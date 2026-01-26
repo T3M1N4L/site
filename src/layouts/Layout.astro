@@ -3,6 +3,7 @@ import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ThemeScript from '../components/ThemeScript.astro';
+import ErudaLoader from '../components/ErudaLoader.astro';
 import { colors, getNextInObj } from '../utils/colors';
 import '../styles/global.scss';
 import type { MarkdownLayoutProps } from 'astro';
@@ -50,5 +51,6 @@ const color2Value = colors[color2Name];
     
     <script is:inline src="/konami.js"></script>
     <script is:inline src="/oneko.js"></script>
+    <ErudaLoader />
   </body>
 </html>

@@ -1,0 +1,39 @@
+---
+---
+
+<script>
+  let typedKeys = '';
+  let isErudaLoaded = false;
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
+      typedKeys += event.key.toLowerCase();
+      
+      if (typedKeys.length > 10) {
+        typedKeys = typedKeys.slice(-10);
+      }
+      
+      if (typedKeys.includes('eruda') && !isErudaLoaded) {
+        isErudaLoaded = true;
+        loadEruda();
+      }
+    }
+  });
+
+  async function loadEruda() {
+    try {
+      const { default: eruda } = await import('eruda');
+      
+      eruda.init({
+        defaults: {
+          displaySize: 45,
+          theme: 'AMOLED'
+        }
+      });
+      console.log('Eruda activated!');
+    } catch (error) {
+      console.error('Error loading Eruda:', error);
+      isErudaLoaded = false;
+    }
+  }
+</script>
