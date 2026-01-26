@@ -10,8 +10,8 @@ compatibility_flags = ["nodejs_compat"]
 
 # Custom domain routes
 routes = [
-  { pattern = "t3rm1n4l.dev/*", custom_domain = true },
-  { pattern = "www.t3rm1n4l.dev/*", custom_domain = true }
+  { pattern = "t3rm1n4l.dev", custom_domain = true },
+  { pattern = "www.t3rm1n4l.dev", custom_domain = true }
 ]
 
 [build]
