@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import ButtonCarousel from '../components/ButtonCarousel.astro';
+import SocialsWrapper from '../components/SocialsWrapper.astro';
 import { parseEmojis } from '../utils/emoji';
 
 const title = 'Home';
@@ -80,6 +81,10 @@ const interestButtons = [
   
   <ButtonCarousel buttons={interestButtons} />
 
+  <h2>socials</h2>
+
+  <SocialsWrapper />
+
   <h2>projects</h2>
 
   <projects-container>
@@ -92,7 +97,7 @@ const interestButtons = [
     
     <ProjectCard 
       title="rigtools updated ui"
-      desc="an updated version of a devtools exploit with a better ui"
+      desc="an updated version of a devtools utility with a better ui"
       link="https://github.com/T3M1N4L/rigtools-updated-ui"
       color="peach"
     />
@@ -119,9 +124,9 @@ const interestButtons = [
     />
 
     <ProjectCard 
-      title="amoled-comfy"
-      desc="a fork of a discord-client theme with automatic updates"
-      link="https://github.com/t3m1n4l/AMOLED-comfy/"
+      title="amoled-github"
+      desc="a visually pleasing amoled theme for vscode with 9K+ downloads"
+      link="https://marketplace.visualstudio.com/items?itemName=T3M1N4L.amoled-github"
       color="blue"
     />
   </projects-container>

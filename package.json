@@ -11,7 +11,12 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/svelte": "^7.2.5",
+    "@iconify/svelte": "^5.2.1",
+    "@iconify-json/fa7-brands": "^1.2.1",
+    "@iconify-json/material-symbols": "^1.2.53",
     "astro": "^5.16.15",
+    "astro-icon": "^1.1.5",
     "eruda": "^3.4.3",
     "node-emoji": "^2.2.0",
     "sass": "^1.97.3",

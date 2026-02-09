@@ -29,6 +29,7 @@
   --crust: 0% 0 0;
 
   --bounce: cubic-bezier(0.175, 0.885, 0.32, 1.9);
+  --bounce-weak: cubic-bezier(0.175, 0.885, 0.32, 1.5);
 
   --monospace: "Iosevka Term Web", "Iosevka", monospace;
 
@@ -130,6 +131,11 @@ body {
   * {
     font-family: -apple-system, BlinkMacSystemFont, Inter, sans-serif;
   }
+}
+
+svg,
+svg * {
+  color: inherit;
 }
 
 .letters {
@@ -349,15 +355,14 @@ a {
     border: none !important;
     padding: 0;
   }
+li & {
+    border: none !important;
+    padding: 0;
+    border-radius: 0;
 
-  &.socials {
     text-decoration-style: wavy;
     text-decoration-line: underline;
     text-decoration-color: oklch(var(--color));
-
-    &:hover {
-      transform: scale(1.05) skew(-5deg);
-    }
   }
 
   &:not(.no-style) {
@@ -498,13 +503,17 @@ img {
   }
 }
 
-ul,
-ol {
+ul {
   list-style: none;
   padding: 0 20px;
   margin: 0;
 }
-
+ol {
+  line-height: 1.5;
+} 
+ol li::marker {
+    color: oklch(var(--color));
+}
 ul,
 li,
 .fli {
@@ -564,6 +573,13 @@ small {
 hr {
   border: none;
   margin: 1rem 0;
+}
+blockquote {
+  background-color: oklch(var(--surface0) / 0.5);
+  border-left: 5px solid oklch(var(--color));
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 5px;
 }
 
 hr::after {
