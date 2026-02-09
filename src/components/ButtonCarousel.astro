@@ -86,7 +86,7 @@ const { buttons } = Astro.props;
     font-weight: 500;
     font-size: 0.875rem;
     white-space: nowrap;
-    border: 1px solid oklch(var(--surface1));
+    border: 1px solid oklch(var(--surface1) / 0.5);
     min-height: 31px;
     display: flex;
     align-items: center;
@@ -131,25 +131,10 @@ const { buttons } = Astro.props;
     background: linear-gradient(to left, oklch(var(--base)), transparent);
   }
 
-  @media (prefers-reduced-motion: reduce) or (orientation: portrait) {
-    .button-carousel {
-      white-space: initial;
-    }
-
+  @media (prefers-reduced-motion: reduce) {
     .button-row,
     .web-button {
-      display: flex;
-      flex-wrap: wrap;
-      white-space: initial;
       animation: none;
-    }
-
-    .button-row:nth-of-type(2) {
-      display: none;
-    }
-
-    .buttons-container {
-      height: initial;
     }
   }
 
