@@ -23,12 +23,13 @@ transform: scale(1.02);
 }
 @media screen and (max-width:600px) {
 flex-wrap: wrap;
+overflow: visible;
 }
 
 & > a {
 --color: white;
 flex: 1;
-height: 80px;
+height: 100px;
 display: flex;
 align-items: center;
 justify-content: center;
