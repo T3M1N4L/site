@@ -1,65 +1,90 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { GengarType } from "./gengar-type";
+  import { PokemonType } from "./pokemon-type";
 
-  let gengarEl: HTMLImageElement;
+  export let pokemon: string = "gengar";
+
+  let pokemonEl: HTMLImageElement;
   let collisionEl: HTMLDivElement;
   let bubbleEl: HTMLImageElement;
   let pokeballEl: HTMLDivElement;
-  let gengar: GengarType | null = null;
+  let pokemonInstance: PokemonType | null = null;
   let animationInterval: ReturnType<typeof setInterval>;
   let spawned = false;
 
-  const GENGAR_SIZE = 48;
+  const POKEMON_SIZE = 48;
+
+  function startAnimationLoop() {
+    if (animationInterval) {
+      clearInterval(animationInterval);
+    }
+    animationInterval = setInterval(() => {
+      if (pokemonInstance) {
+        pokemonInstance.nextFrame();
+      }
+    }, 100);
+  }
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      // Pause animation when tab is hidden
+      if (animationInterval) {
+        clearInterval(animationInterval);
+      }
+    } else {
+      // Resume animation when tab becomes visible
+      startAnimationLoop();
+    }
+  }
 
   onMount(() => {
     // Small delay to ensure container is rendered with proper dimensions
     setTimeout(() => {
-      gengar = new GengarType(
-        gengarEl,
+      pokemonInstance = new PokemonType(
+        pokemonEl,
         collisionEl,
         bubbleEl,
         0,
         0,
-        GENGAR_SIZE,
+        POKEMON_SIZE,
+        pokemon,
       );
 
       // Start pokeball animation
       pokeballEl.classList.add("pokeball-open");
 
-      // Show gengar partway through the pokeball animation
+      // Show pokemon partway through the pokeball animation
       const spawnDelay = 315; // 0.7 * 450ms
       const spawnTimeout = setTimeout(() => {
         if (!spawned) {
           spawned = true;
-          gengarEl.classList.add("spawn-pop");
-          gengarEl.style.opacity = "1";
+          pokemonEl.classList.add("spawn-pop");
+          pokemonEl.style.opacity = "1";
         }
       }, spawnDelay);
 
-      // When pokeball animation ends, remove it and ensure gengar is visible
+      // When pokeball animation ends, remove it and ensure pokemon is visible
       pokeballEl.addEventListener("animationend", (e) => {
         if ((e as AnimationEvent).animationName !== "pokeball-open") return;
         pokeballEl.style.display = "none";
         clearTimeout(spawnTimeout);
         if (!spawned) {
           spawned = true;
-          gengarEl.classList.add("spawn-pop");
-          gengarEl.style.opacity = "1";
+          pokemonEl.classList.add("spawn-pop");
+          pokemonEl.style.opacity = "1";
         }
       });
 
-      // Animation loop
-      animationInterval = setInterval(() => {
-        if (gengar) {
-          gengar.nextFrame();
-        }
-      }, 100);
+      // Start animation loop
+      startAnimationLoop();
+
+      // Handle visibility changes (tab switching)
+      document.addEventListener("visibilitychange", handleVisibilityChange);
 
       // Handle hover - stop and show bubble like vscode-pokemon
       collisionEl.addEventListener("mouseover", () => {
-        if (gengar) {
-          gengar.swipe();
+        if (pokemonInstance) {
+          pokemonInstance.swipe();
         }
       });
     }, 100);
@@ -68,6 +93,7 @@
       if (animationInterval) {
         clearInterval(animationInterval);
       }
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   });
 </script>
@@ -75,10 +101,10 @@
 <div bind:this={pokeballEl} class="pokeball-sprite"></div>
 
 <img
-  bind:this={gengarEl}
-  src="/gengar/default_idle_8fps.gif"
-  alt="Gengar"
-  class="gengar"
+  bind:this={pokemonEl}
+  src={`/pokemon/${pokemon}/default_idle_8fps.gif`}
+  alt={pokemon}
+  class="pokemon-sprite"
   style="opacity: 0;"
 />
 
@@ -95,7 +121,7 @@
     left: 0;
     width: var(--frame-size);
     height: var(--frame-size);
-    background-image: url('/gengar/pokeball_sprite_sheet.png');
+    background-image: url('/pokemon/pokeball_sprite_sheet.png');
     background-repeat: no-repeat;
     background-position: 0 0;
     background-size: var(--frame-size) calc(var(--frame-size) * var(--frames));
@@ -113,7 +139,7 @@
     }
   }
 
-  .gengar {
+  .pokemon-sprite {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -124,7 +150,7 @@
     image-rendering: crisp-edges;
   }
 
-  .gengar:global(.spawn-pop) {
+  .pokemon-sprite:global(.spawn-pop) {
     animation: pokemon-pop 150ms ease-out;
     opacity: 1 !important;
     will-change: transform, opacity, filter;

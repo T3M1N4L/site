@@ -16,7 +16,7 @@ export enum States {
   swipe = 'swipe',
 }
 
-export interface IGengar {
+export interface IPokemon {
   left: number;
   bottom: number;
   speed: number;
@@ -31,7 +31,7 @@ export interface IState {
   label: States;
   spriteLabel: string;
   horizontalDirection: HorizontalDirection;
-  gengar: IGengar;
+  pokemon: IPokemon;
   nextFrame(): FrameResult;
 }
 
@@ -40,12 +40,12 @@ class AbstractStaticState implements IState {
   idleCounter: number;
   spriteLabel = 'idle';
   holdTime = 50;
-  gengar: IGengar;
+  pokemon: IPokemon;
   horizontalDirection = HorizontalDirection.right;
 
-  constructor(gengar: IGengar) {
+  constructor(pokemon: IPokemon) {
     this.idleCounter = 0;
-    this.gengar = gengar;
+    this.pokemon = pokemon;
   }
 
   nextFrame(): FrameResult {
@@ -73,38 +73,37 @@ export class SwipeState extends AbstractStaticState {
 
 export class WalkRightState implements IState {
   label = States.walkRight;
-  gengar: IGengar;
+  pokemon: IPokemon;
   spriteLabel = 'walk';
   horizontalDirection = HorizontalDirection.right;
   speedMultiplier = 1;
   idleCounter: number;
   holdTime = 60;
 
-  constructor(gengar: IGengar) {
-    this.gengar = gengar;
+  constructor(pokemon: IPokemon) {
+    this.pokemon = pokemon;
     this.idleCounter = 0;
   }
 
   nextFrame(): FrameResult {
     this.idleCounter++;
-    this.gengar.positionLeft(
-      this.gengar.left + this.gengar.speed * this.speedMultiplier,
-    );
-
-    // Random chance to stop in the middle
-    if (this.gengar.isMoving && Math.random() < 0.01) {
-      return FrameResult.stateComplete;
+    
+    // Only move after a few frames to ensure animation has switched from idle to walk
+    if (this.idleCounter > 2) {
+      this.pokemon.positionLeft(
+        this.pokemon.left + this.pokemon.speed * this.speedMultiplier,
+      );
     }
 
     // Get current boundary dynamically
-    const rightBoundary = this.gengar.containerWidth - this.gengar.width;
+    const rightBoundary = this.pokemon.containerWidth - this.pokemon.width;
 
     if (
-      this.gengar.isMoving &&
-      this.gengar.left >= rightBoundary
+      this.pokemon.isMoving &&
+      this.pokemon.left >= rightBoundary
     ) {
       return FrameResult.stateComplete;
-    } else if (!this.gengar.isMoving && this.idleCounter > this.holdTime) {
+    } else if (!this.pokemon.isMoving && this.idleCounter > this.holdTime) {
       return FrameResult.stateComplete;
     }
     return FrameResult.stateContinue;
@@ -115,48 +114,47 @@ export class WalkLeftState implements IState {
   label = States.walkLeft;
   spriteLabel = 'walk';
   horizontalDirection = HorizontalDirection.left;
-  gengar: IGengar;
+  pokemon: IPokemon;
   speedMultiplier = 1;
   idleCounter: number;
   holdTime = 60;
 
-  constructor(gengar: IGengar) {
-    this.gengar = gengar;
+  constructor(pokemon: IPokemon) {
+    this.pokemon = pokemon;
     this.idleCounter = 0;
   }
 
   nextFrame(): FrameResult {
     this.idleCounter++;
-    this.gengar.positionLeft(
-      this.gengar.left - this.gengar.speed * this.speedMultiplier,
-    );
-
-    // Random chance to stop in the middle
-    if (this.gengar.isMoving && Math.random() < 0.01) {
-      return FrameResult.stateComplete;
+    
+    // Only move after a few frames to ensure animation has switched from idle to walk
+    if (this.idleCounter > 2) {
+      this.pokemon.positionLeft(
+        this.pokemon.left - this.pokemon.speed * this.speedMultiplier,
+      );
     }
 
-    // Stop at left edge of container (0)
-    if (this.gengar.isMoving && this.gengar.left <= 0) {
+    // Stop at left edge of container (0) - don't stop randomly in the middle
+    if (this.pokemon.isMoving && this.pokemon.left <= 0) {
       return FrameResult.stateComplete;
-    } else if (!this.gengar.isMoving && this.idleCounter > this.holdTime) {
+    } else if (!this.pokemon.isMoving && this.idleCounter > this.holdTime) {
       return FrameResult.stateComplete;
     }
     return FrameResult.stateContinue;
   }
 }
 
-export function resolveState(state: States, gengar: IGengar): IState {
+export function resolveState(state: States, pokemon: IPokemon): IState {
   switch (state) {
     case States.sitIdle:
-      return new SitIdleState(gengar);
+      return new SitIdleState(pokemon);
     case States.walkRight:
-      return new WalkRightState(gengar);
+      return new WalkRightState(pokemon);
     case States.walkLeft:
-      return new WalkLeftState(gengar);
+      return new WalkLeftState(pokemon);
     case States.swipe:
-      return new SwipeState(gengar);
+      return new SwipeState(pokemon);
     default:
-      return new SitIdleState(gengar);
+      return new SitIdleState(pokemon);
   }
 }

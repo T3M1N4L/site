@@ -3,15 +3,15 @@ import {
   HorizontalDirection,
   FrameResult,
   resolveState,
-} from './gengar-states';
-import type { IState, IGengar } from './gengar-states';
+} from './pokemon-states';
+import type { IState, IPokemon } from './pokemon-states';
 
 interface ISequenceState {
   state: States;
   possibleNextStates: States[];
 }
 
-export class GengarType implements IGengar {
+export class PokemonType implements IPokemon {
   currentState: IState;
   currentStateEnum: States;
   holdState: IState | undefined;
@@ -23,6 +23,7 @@ export class GengarType implements IGengar {
   private _bottom: number;
   private _speed: number = 2;
   private _width: number;
+  private _pokemonName: string;
 
   sequence: ISequenceState[] = [
     {
@@ -46,6 +47,7 @@ export class GengarType implements IGengar {
     left: number,
     bottom: number,
     width: number,
+    pokemonName: string = 'gengar',
   ) {
     this.el = spriteElement;
     this.collision = collisionElement;
@@ -53,6 +55,7 @@ export class GengarType implements IGengar {
     this._left = left;
     this._bottom = bottom;
     this._width = width;
+    this._pokemonName = pokemonName;
 
     this.initSprite(left, width);
 
@@ -132,7 +135,7 @@ export class GengarType implements IGengar {
     if (this.el.src.includes(filename)) {
       return;
     }
-    this.el.src = `/gengar/${filename}`;
+    this.el.src = `/pokemon/${this._pokemonName}/${filename}`;
   }
 
   showSpeechBubble(duration: number = 2000) {

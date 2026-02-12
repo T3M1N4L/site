@@ -2,7 +2,15 @@
 import gitInfo from '../generated/git.json' assert { type: 'json' };
 import { parseEmojis } from '../utils/emoji';
 import navItems from '../nav';
-import Gengar from './Gengar.svelte';
+import Pokemon from './Pokemon.svelte';
+import { getPokemonForColor } from './pokemon-map';
+
+interface Props {
+  color?: string;
+}
+
+const { color = 'lavender' } = Astro.props;
+const pokemon = getPokemonForColor(color);
 
 const packageJson = await import('../../package.json');
 const version = packageJson.version;
@@ -35,7 +43,7 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
         </button>
       </yescript>
     </div>
-    <div class="gengar-track"><Gengar client:load /></div>
+    <div class="pokemon-track"><Pokemon {pokemon} client:load /></div>
     <div class="nav">
       <Fragment set:html={navigationHtml} />
       <br/>
@@ -48,7 +56,7 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
     max-width: 490px;
   }
 
-  .gengar-track {
+  .pokemon-track {
     flex: 1;
     position: relative;
     height: 48px;
