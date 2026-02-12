@@ -2,6 +2,7 @@
 import gitInfo from '../generated/git.json' assert { type: 'json' };
 import { parseEmojis } from '../utils/emoji';
 import navItems from '../nav';
+import Gengar from './Gengar.svelte';
 
 const packageJson = await import('../../package.json');
 const version = packageJson.version;
@@ -16,7 +17,7 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
 
 <nav>
   <div class="inner">
-    <div style="max-width: 490px;">
+    <div class="left-col">
       <a href="/" class="no-style">
         <h1 style="margin:0;font-size:2.5em;" class="navtitle">t3rm1n4l</h1>
       </a><code style="font-size:15px;">v{version}</code>
@@ -34,6 +35,7 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
         </button>
       </yescript>
     </div>
+    <div class="gengar-track"><Gengar client:load /></div>
     <div class="nav">
       <Fragment set:html={navigationHtml} />
       <br/>
@@ -42,6 +44,20 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
 </nav>
 
 <style>
+  .left-col {
+    max-width: 490px;
+  }
+
+  .gengar-track {
+    flex: 1;
+    position: relative;
+    height: 48px;
+    align-self: flex-end;
+    margin-bottom: -2rem;
+    overflow: visible;
+    min-width: 100px;
+  }
+
   yescript {
     display: contents;
   }
