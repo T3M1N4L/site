@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -29,6 +30,7 @@ const color2Value = colors[color2Name];
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <ClientRouter />
     <BaseHead title={title} description={description} color={color} />
     <style is:inline set:html={`:root{--color:var(--${color});--color2:var(--${color2Name})}`}>
     </style>
