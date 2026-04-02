@@ -30,15 +30,10 @@
         overflow: hidden;
       }
 
-      video {
+      .player {
         width: auto;
         height: 30%;
-        display: none;
-      }
-
-      canvas {
-        width: auto;
-        height: 30%;
+        display: block;
       }
 
       audio {
@@ -178,22 +173,6 @@
         position: relative;
       }
 
-      video::-webkit-media-controls-panel {
-        display: none !important;
-      }
-
-      video::-internal-media-controls-overlay-cast-button {
-        display: none !important;
-      }
-
-      video::-webkit-media-controls {
-        filter: invert(1) hue-rotate(180deg);
-      }
-
-      video::-webkit-media-controls-panel {
-        background: transparent;
-      }
-
       html > div[style] {
         display: none !important;
       }
@@ -212,7 +191,7 @@
 
       <a class="amini">huh? why is this needed?</a>
       <audio class="audio2">
-        <source src="https://soggy.cat/static/other/main/audio/fanfare.opus" type="audio/ogg" />
+        <source src="/wukko/audio/fanfare.mp3" type="audio/mpeg" />
       </audio>
     </div>
 
@@ -225,46 +204,160 @@
 
     <a class="bgtext">404</a>
 
-    <video
-      class="video"
-      controls
-      autoplay
-      preload="auto"
-      crossorigin="anonymous"
-      playsinline
-      webkit-playsinline
-    >
-      <source src="https://soggy.cat/static/other/shared/videos/404.mp4" type="video/mp4" />
-      <track
-        label="English"
-        kind="subtitles"
-        srclang="en"
-        src="https://soggy.cat/static/other/shared/other/404.vtt"
-        default
-      />
-    </video>
-
-    <canvas id="canvas"></canvas>
+    <img class="player" alt="" draggable="false" />
     <div class="subtitles"></div>
 
-    <audio class="audio" autoplay preload="auto">
-      <source src="https://soggy.cat/static/other/main/audio/fromthestart.opus" type="audio/ogg" />
-    </audio>
+    <audio
+      class="audio"
+      autoplay
+      loop
+      preload="auto"
+      src="/wukko/audio/fromthestart.mp3"
+    ></audio>
 
-    <script is:inline>
+    <script type="module" is:inline>
+      import { BlobReader, BlobWriter, ZipReader } from "https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.57/+esm";
+
       document.addEventListener("DOMContentLoaded", () => {
-        const video = document.querySelector(".video");
+        const fps = 10;
+        const totalFrames = 1633;
+        const player = document.querySelector(".player");
         const audio = document.querySelector(".audio");
         const waiting = document.querySelector(".waiting");
+        const waitingText = document.querySelector(".atext");
         const subtitles = document.querySelector(".subtitles");
         const dilemma = document.querySelector(".dilemma");
         const audio2 = document.querySelector(".audio2");
-        const canvas = document.getElementById("canvas");
-        const ctx = canvas.getContext("2d", { willReadFrequently: true });
-        const track = video.textTracks[0];
+        let currentFrame = 1;
+        let requestedFrame = 1;
+        let cues = [];
+        const frameEntries = [];
+        const frameUrls = new Map();
+        const framePromises = new Map();
+        let zipReady = false;
 
-        video.removeAttribute("controlslist");
-        video.setAttribute("controlslist", "nodownload nofullscreen noremoteplayback");
+        const loadFramesZip = async () => {
+          waitingText.textContent = "loading zipped frames...";
+          const response = await fetch("/wukko/frames.zip");
+          const blob = await response.blob();
+          const zipReader = new ZipReader(new BlobReader(blob));
+          const entries = await zipReader.getEntries();
+
+          frameEntries.push(
+            ...entries
+              .filter((entry) => entry.filename.endsWith(".webp"))
+              .sort((left, right) => left.filename.localeCompare(right.filename)),
+          );
+
+          zipReady = frameEntries.length === totalFrames;
+          waitingText.textContent = "autoplay fallback: click to play";
+        };
+
+        const getFrameUrl = async (frameNumber) => {
+          if (frameUrls.has(frameNumber)) {
+            return frameUrls.get(frameNumber);
+          }
+
+          if (framePromises.has(frameNumber)) {
+            return framePromises.get(frameNumber);
+          }
+
+          const entry = frameEntries[frameNumber - 1];
+          if (!entry) {
+            return null;
+          }
+
+          const promise = entry
+            .getData(new BlobWriter("image/webp"))
+            .then((blob) => {
+              const url = URL.createObjectURL(blob);
+              frameUrls.set(frameNumber, url);
+              framePromises.delete(frameNumber);
+              return url;
+            })
+            .catch((error) => {
+              framePromises.delete(frameNumber);
+              throw error;
+            });
+
+          framePromises.set(frameNumber, promise);
+          return promise;
+        };
+
+        const preloadFrame = (frameNumber) => {
+          if (!zipReady || frameNumber > totalFrames) {
+            return;
+          }
+
+          void getFrameUrl(frameNumber);
+        };
+
+        const renderFrame = async (time) => {
+          if (!zipReady) {
+            return;
+          }
+
+          const frameNumber = Math.min(totalFrames, Math.max(1, Math.floor(time * fps) + 1));
+          if (frameNumber === currentFrame || frameNumber === requestedFrame) {
+            return;
+          }
+
+          requestedFrame = frameNumber;
+          const url = await getFrameUrl(frameNumber);
+          if (!url || requestedFrame !== frameNumber) {
+            return;
+          }
+
+          currentFrame = frameNumber;
+          player.src = url;
+
+          for (let nextFrame = frameNumber + 1; nextFrame <= frameNumber + 4; nextFrame += 1) {
+            preloadFrame(nextFrame);
+          }
+        };
+
+        const parseTimestamp = (value) => {
+          const [hours, minutes, seconds] = value.split(":");
+          return Number(hours) * 3600 + Number(minutes) * 60 + Number(seconds);
+        };
+
+        const parseVtt = (vtt) =>
+          vtt
+            .replace(/\r/g, "")
+            .split(/\n\n+/)
+            .flatMap((block) => {
+              const lines = block.split("\n").filter(Boolean);
+              if (!lines.length || lines[0] === "WEBVTT" || lines[0].startsWith("NOTE")) {
+                return [];
+              }
+
+              const timelineIndex = lines.findIndex((line) => line.includes("-->"));
+              if (timelineIndex === -1) {
+                return [];
+              }
+
+              const [start, end] = lines[timelineIndex]
+                .split("-->")
+                .map((part) => part.trim().split(" ")[0]);
+              const html = lines.slice(timelineIndex + 1).join("<br>");
+
+              if (!html) {
+                return [];
+              }
+
+              return [{ start: parseTimestamp(start), end: parseTimestamp(end), html }];
+            });
+
+        const updateSubtitles = (time) => {
+          const cue = cues.find((item) => time >= item.start && time < item.end);
+          subtitles.innerHTML = cue ? cue.html : "";
+        };
+
+        const tick = () => {
+          void renderFrame(audio.currentTime);
+          updateSubtitles(audio.currentTime);
+          requestAnimationFrame(tick);
+        };
 
         const showFallback = () => {
           waiting.style.display = "flex";
@@ -277,8 +370,6 @@
         const attemptAutoplay = async () => {
           try {
             hideFallback();
-            await video.play();
-            audio.currentTime = video.currentTime;
             await audio.play();
           } catch {
             showFallback();
@@ -318,82 +409,26 @@
           ).join("");
         }, 100);
 
-        track.mode = "hidden";
-        track.oncuechange = () => {
-          const cue = track.activeCues[0];
-          subtitles.innerHTML = cue ? cue.text : "";
-        };
+        Promise.all([
+          fetch("/wukko/404.vtt")
+            .then((response) => response.text())
+            .then((text) => {
+              cues = parseVtt(text);
+            })
+            .catch(() => {
+              cues = [];
+            }),
+          loadFramesZip(),
+        ]).then(async () => {
+          player.src = (await getFrameUrl(1)) ?? "";
 
-        video.onended = () => {
-          if (document.fullscreenElement && document.exitFullscreen) {
-            document.exitFullscreen().catch(() => {});
+          for (let frameNumber = 1; frameNumber <= 5; frameNumber += 1) {
+            preloadFrame(frameNumber);
           }
-          location.href = "/";
-        };
 
-        video.addEventListener("loadeddata", () => {
-          canvas.width = video.videoWidth;
-          canvas.height = video.videoHeight;
+          tick();
+          attemptAutoplay();
         });
-
-        const remove = () => {
-          if (!canvas.width || !canvas.height) {
-            requestAnimationFrame(remove);
-            return;
-          }
-
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          const frame = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const data = frame.data;
-
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i];
-            const g = data[i + 1];
-            const b = data[i + 2];
-
-            if (r > 250 && g > 250 && b > 250) {
-              data[i + 3] = 0;
-            }
-          }
-
-          ctx.putImageData(frame, 0, 0);
-          requestAnimationFrame(remove);
-        };
-
-        video.addEventListener("play", () => {
-          audio.currentTime = video.currentTime;
-          audio.play().catch(() => {});
-          requestAnimationFrame(remove);
-        });
-
-        video.addEventListener("pause", () => {
-          audio.pause();
-        });
-
-        let syncTimer = null;
-        const sync = () => {
-          if (video.paused || audio.paused) {
-            return;
-          }
-
-          const diff = Math.abs(audio.currentTime - video.currentTime);
-          if (diff > 0.2) {
-            audio.currentTime = video.currentTime;
-          }
-        };
-
-        video.addEventListener("timeupdate", () => {
-          if (syncTimer) {
-            return;
-          }
-
-          syncTimer = setTimeout(() => {
-            sync();
-            syncTimer = null;
-          }, 2000);
-        });
-
-        attemptAutoplay();
       });
     </script>
   </body>
