@@ -16,7 +16,7 @@ const { buttons } = Astro.props;
     <div class="button-row">
       {buttons.map((button) => (
         <div class="button-wrapper">
-          <span class="web-button">
+          <span class="web-button" data-haptic="heavy">
             {button.label}
           </span>
         </div>
@@ -25,7 +25,7 @@ const { buttons } = Astro.props;
     <div class="button-row">
       {buttons.map((button) => (
         <div class="button-wrapper">
-          <span class="web-button">
+          <span class="web-button" data-haptic="heavy">
             {button.label}
           </span>
         </div>

@@ -9,7 +9,7 @@ interface Props {
 const { title, desc, link, color } = Astro.props;
 ---
 
-<project-card onclick={`window.open('${link}')`} style={`--color:var(--${color});`} data-haptic="medium">
+<project-card onclick={`window.open('${link}')`} style={`--color:var(--${color});`} data-haptic="heavy">
   <h3>{title}</h3>
   <p>{desc}</p>
 </project-card>

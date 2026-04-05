@@ -132,7 +132,7 @@
   class="shiny-overlay"
 />
 
-<div bind:this={collisionEl} class="collision"></div>
+<div bind:this={collisionEl} class="collision" data-haptic="buzz"></div>
 
 <img bind:this={bubbleEl} class="bubble" alt="Happy face" />
 

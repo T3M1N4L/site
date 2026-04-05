@@ -2,12 +2,22 @@
 ---
 
 <script is:inline>
-  document.body.setAttribute('class', window.localStorage.getItem("theme") || '');
+    const THEME_CLASSES = ['UwU', 'monospace'];
 
-  function updateThemeClass() {
-      const theme = window.localStorage.getItem("theme") || '';
-      const retro = window.localStorage.getItem("retro") === "true" ? "retro" : "";
-      document.body.setAttribute('class', `${theme} ${retro}`.trim());
+    function updateThemeClass() {
+    const theme = window.localStorage.getItem("theme") || '';
+        const retroEnabled = window.localStorage.getItem("retro") === "true";
+
+            document.body.classList.remove(...THEME_CLASSES);
+            document.body.classList.remove('retro');
+
+            if (theme) {
+                document.body.classList.add(theme);
+            }
+
+            if (retroEnabled) {
+                document.body.classList.add('retro');
+            }
   }
 
   function toggleUwU() {
@@ -25,5 +35,7 @@
       updateThemeClass();
   }
 
-  document.addEventListener("DOMContentLoaded", updateThemeClass);
+    updateThemeClass();
+    document.addEventListener("DOMContentLoaded", updateThemeClass);
+    document.addEventListener("astro:page-load", updateThemeClass);
 </script>

@@ -211,7 +211,6 @@ function isMobile(opts) {
         storedNeko.idleAnimationFrame ?? state.idleAnimationFrame;
       state.bgPos = storedNeko.bgPos ?? state.bgPos;
     } catch (_) {
-      // Ignore malformed localStorage data and fall back to defaults.
     }
   }
 

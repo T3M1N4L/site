@@ -97,7 +97,6 @@ export class PokemonType implements IPokemon {
   }
 
   get containerWidth(): number {
-    // Use the grandparent (.inner) width for full navbar span
     const grandparent = this.el.parentElement?.parentElement;
     return grandparent?.clientWidth || this.el.parentElement?.clientWidth || 200;
   }
@@ -107,7 +106,6 @@ export class PokemonType implements IPokemon {
   }
 
   positionLeft(left: number): void {
-    // Clamp to container bounds
     const containerW = this.containerWidth;
     const maxLeft = Math.max(0, containerW - this._width);
     this._left = Math.max(0, Math.min(left, maxLeft));
@@ -134,7 +132,6 @@ export class PokemonType implements IPokemon {
         ? `${this._spritePrefix}_idle_8fps.gif`
         : `${this._spritePrefix}_walk_8fps.gif`;
 
-    // Only update if different to avoid restarting the GIF
     if (this.el.src.includes(filename)) {
       return;
     }
@@ -173,22 +170,17 @@ export class PokemonType implements IPokemon {
   }
 
   nextFrame() {
-    // Handle facing direction (skip for swipe to keep current direction)
     if (this.currentState.horizontalDirection === HorizontalDirection.left) {
       this.faceLeft();
     } else if (this.currentState.horizontalDirection === HorizontalDirection.right) {
       this.faceRight();
     }
 
-    // Set the animation sprite
     this.setAnimation(this.currentState.spriteLabel);
 
-    // Execute frame logic
     const frameResult = this.currentState.nextFrame();
 
-    // Handle state transitions
     if (frameResult === FrameResult.stateComplete) {
-      // If recovering from swipe, restore previous state
       if (this.holdState && this.holdStateEnum) {
         this.currentState = this.holdState;
         this.currentStateEnum = this.holdStateEnum;

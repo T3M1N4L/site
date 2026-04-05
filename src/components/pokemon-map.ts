@@ -1,4 +1,3 @@
-// Maps color theme names to pokemon
 export const colorToPokemon: Record<string, string> = {
   rosewater: 'bidoof',
   flamingo: 'jigglypuff',

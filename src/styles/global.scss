@@ -354,7 +354,10 @@ a {
   border: 2px solid oklch(var(--color));
 
   transition:
-    all 0.5s var(--bounce),
+    transform 0.5s var(--bounce),
+    background-color 0.5s var(--bounce),
+    opacity 0.5s var(--bounce),
+    filter 0.5s var(--bounce),
     color 0.25s,
     border-color 0.25s;
 
@@ -396,7 +399,10 @@ button {
   background: oklch(var(--mantle) / 0.5);
   border: 2px dashed oklch(var(--mantle) / 0.9);
   transition:
-    all 0.5s var(--bounce),
+    transform 0.5s var(--bounce),
+    background-color 0.5s var(--bounce),
+    opacity 0.5s var(--bounce),
+    filter 0.5s var(--bounce),
     color 0.25s,
     border 0.25s;
   &:hover {

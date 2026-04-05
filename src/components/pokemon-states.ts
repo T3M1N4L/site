@@ -87,15 +87,13 @@ export class WalkRightState implements IState {
 
   nextFrame(): FrameResult {
     this.idleCounter++;
-    
-    // Only move after a few frames to ensure animation has switched from idle to walk
+
     if (this.idleCounter > 2) {
       this.pokemon.positionLeft(
         this.pokemon.left + this.pokemon.speed * this.speedMultiplier,
       );
     }
 
-    // Get current boundary dynamically
     const rightBoundary = this.pokemon.containerWidth - this.pokemon.width;
 
     if (
@@ -126,15 +124,13 @@ export class WalkLeftState implements IState {
 
   nextFrame(): FrameResult {
     this.idleCounter++;
-    
-    // Only move after a few frames to ensure animation has switched from idle to walk
+
     if (this.idleCounter > 2) {
       this.pokemon.positionLeft(
         this.pokemon.left - this.pokemon.speed * this.speedMultiplier,
       );
     }
 
-    // Stop at left edge of container (0) - don't stop randomly in the middle
     if (this.pokemon.isMoving && this.pokemon.left <= 0) {
       return FrameResult.stateComplete;
     } else if (!this.pokemon.isMoving && this.idleCounter > this.holdTime) {

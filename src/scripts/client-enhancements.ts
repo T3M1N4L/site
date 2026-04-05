@@ -3,7 +3,8 @@ import { WebHaptics } from 'web-haptics';
 
 declare global {
   interface Window {
-    __t3rmEnhancementsInit__?: boolean;
+    __t3rmEnhancementsPageLoadBound__?: boolean;
+    __t3rmEnhancementsAbort__?: AbortController;
     __t3rmHaptics__?: WebHaptics | null;
   }
 }
@@ -11,6 +12,14 @@ declare global {
 const VERY_WIDE_LINE = 100000;
 const pretextWidthCache = new Map<string, number>();
 const pretextHeightCache = new Map<string, ReturnType<typeof prepare>>();
+
+function isTouchHapticsContext() {
+  const hasTouchPoints = typeof navigator.maxTouchPoints === 'number' && navigator.maxTouchPoints > 0;
+  const coarsePointer =
+    window.matchMedia('(pointer: coarse)').matches || window.matchMedia('(any-pointer: coarse)').matches;
+
+  return hasTouchPoints || coarsePointer;
+}
 
 function getFontShorthand(style: CSSStyleDeclaration) {
   if (style.font && style.font.trim().length > 0) {
@@ -45,6 +54,9 @@ function measureWrappedHeight(text: string, font: string, width: number, lineHei
 }
 
 function lockPretextMetrics() {
+  const groupedElements = new Map<string, HTMLElement[]>();
+  const groupedMaxWidth = new Map<string, number>();
+
   document.querySelectorAll<HTMLElement>('[data-pretext-fit]').forEach((element) => {
     const sample = element.dataset.pretextSample ?? element.textContent ?? '';
     const text = sample.replace(/\s+/g, ' ').trim();
@@ -61,6 +73,29 @@ function lockPretextMetrics() {
 
     const width = Math.ceil(measureNaturalWidth(text, getFontShorthand(style)) + chrome + 1);
     element.style.setProperty('--pretext-inline-size', `${width}px`);
+
+    const group = element.dataset.pretextGroup?.trim();
+    if (group) {
+      const list = groupedElements.get(group) ?? [];
+      list.push(element);
+      groupedElements.set(group, list);
+
+      const currentMax = groupedMaxWidth.get(group) ?? 0;
+      if (width > currentMax) {
+        groupedMaxWidth.set(group, width);
+      }
+    }
+  });
+
+  groupedElements.forEach((elements, group) => {
+    const maxWidth = groupedMaxWidth.get(group);
+    if (!maxWidth) {
+      return;
+    }
+
+    elements.forEach((element) => {
+      element.style.setProperty('--pretext-inline-size', `${maxWidth}px`);
+    });
   });
 
   document.querySelectorAll<HTMLElement>('[data-pretext-height]').forEach((element) => {
@@ -115,18 +150,28 @@ function queuePretextMetrics() {
 }
 
 function getHaptics() {
-  if (!WebHaptics.isSupported || !window.matchMedia('(pointer: coarse)').matches) {
+  if (!isTouchHapticsContext()) {
     return null;
   }
 
   if (!window.__t3rmHaptics__) {
-    window.__t3rmHaptics__ = new WebHaptics();
+    try {
+      window.__t3rmHaptics__ = new WebHaptics({
+        debug: false,
+      });
+    } catch {
+      window.__t3rmHaptics__ = null;
+    }
   }
 
   return window.__t3rmHaptics__;
 }
 
-function initHaptics() {
+function initHaptics(signal: AbortSignal) {
+  if (!isTouchHapticsContext()) {
+    return;
+  }
+
   const hapticSelector = [
     '[data-haptic]',
     'button',
@@ -136,43 +181,151 @@ function initHaptics() {
     'input[type="reset"]',
   ].join(', ');
 
+  const resolveHapticPattern = (rawPreset: string) => {
+    const preset = (rawPreset || 'selection').trim().toLowerCase();
+
+    switch (preset) {
+      case 'selection':
+        return {
+          input: 'nudge',
+          fallback: 14,
+        };
+      case 'light':
+        return {
+          input: 20,
+          fallback: 10,
+        };
+      case 'medium':
+        return {
+          input: 'success',
+          fallback: [18, 24, 18],
+        };
+      case 'heavy':
+      case 'rigid':
+        return {
+          input: 'error',
+          fallback: [30, 35, 30],
+        };
+      case 'soft':
+        return {
+          input: [{ duration: 24, intensity: 0.35 }],
+          fallback: 10,
+        };
+      case 'buzz':
+        return {
+          input: 'buzz',
+          fallback: 75,
+        };
+      case 'success':
+      case 'nudge':
+      case 'error':
+        return {
+          input: preset,
+          fallback: preset === 'error' ? [28, 32, 28] : [18, 24, 18],
+        };
+      default:
+        return {
+          input: preset,
+          fallback: 14,
+        };
+    }
+  };
+
+  const fallbackVibrateFromPattern = (pattern: number | number[]) => {
+    if (!('vibrate' in navigator)) {
+      return;
+    }
+
+    navigator.vibrate(pattern);
+  };
+
+  const triggerHaptic = (target: HTMLElement) => {
+    const explicitPreset =
+      target.dataset.haptic || target.closest<HTMLElement>('[data-haptic]')?.dataset.haptic || 'selection';
+
+    let preset = explicitPreset;
+    const anchor = target.closest<HTMLAnchorElement>('a[href]');
+    if (anchor) {
+      try {
+        const url = new URL(anchor.href, window.location.href);
+        const isHttp = url.protocol === 'http:' || url.protocol === 'https:';
+        const isExternal = isHttp ? url.origin !== window.location.origin : true;
+        if (isExternal) {
+          preset = 'heavy';
+        }
+      } catch {
+      }
+    }
+
+    const pattern = resolveHapticPattern(preset);
+    const haptics = getHaptics();
+
+    if (!haptics) {
+      fallbackVibrateFromPattern(pattern.fallback);
+      return;
+    }
+
+    void haptics
+      .trigger(pattern.input)
+      .catch(() => {
+        fallbackVibrateFromPattern(pattern.fallback);
+      });
+  };
+
+  let lastHapticAt = 0;
+
+  const onHapticInput = (target: EventTarget | null) => {
+    if (!(target instanceof Element)) {
+      return;
+    }
+
+    const hapticTarget = target.closest<HTMLElement>(hapticSelector);
+    if (!hapticTarget) {
+      return;
+    }
+
+    const now = Date.now();
+    if (now - lastHapticAt < 80) {
+      return;
+    }
+    lastHapticAt = now;
+
+    triggerHaptic(hapticTarget);
+  };
+
   document.addEventListener(
     'pointerdown',
     (event) => {
-      const target = event.target instanceof Element ? event.target.closest<HTMLElement>(hapticSelector) : null;
-      if (!target) {
-        return;
-      }
-
-      if (event.pointerType && event.pointerType !== 'touch') {
-        return;
-      }
-
-      const preset = target.dataset.haptic || 'selection';
-      const haptics = getHaptics();
-      if (!haptics) {
-        return;
-      }
-
-      void haptics.trigger(preset);
+      onHapticInput(event.target);
     },
-    { capture: true, passive: true }
+    { capture: true, passive: true, signal }
   );
 
-  window.addEventListener('pagehide', () => {
-    window.__t3rmHaptics__?.destroy();
-    window.__t3rmHaptics__ = null;
-  });
+  document.addEventListener(
+    'touchstart',
+    (event) => {
+      onHapticInput(event.target);
+    },
+    { capture: true, passive: true, signal }
+  );
+
+  document.addEventListener(
+    'click',
+    (event) => {
+      onHapticInput(event.target);
+    },
+    { capture: true, passive: true, signal }
+  );
 }
 
-function initPretext() {
+function initPretext(signal: AbortSignal) {
   queuePretextMetrics();
 
   if (document.fonts?.ready) {
     void document.fonts.ready.then(queuePretextMetrics);
   }
 
-  document.fonts?.addEventListener?.('loadingdone', queuePretextMetrics);
+  document.fonts?.addEventListener?.('loadingdone', queuePretextMetrics, { signal });
 
   const observer = new MutationObserver(queuePretextMetrics);
   observer.observe(document.body, {
@@ -180,12 +333,18 @@ function initPretext() {
     subtree: true,
     attributeFilter: ['class'],
   });
+  signal.addEventListener(
+    'abort',
+    () => {
+      observer.disconnect();
+    },
+    { once: true }
+  );
 
-  window.addEventListener('resize', queuePretextMetrics, { passive: true });
-  document.addEventListener('astro:page-load', queuePretextMetrics);
+  window.addEventListener('resize', queuePretextMetrics, { passive: true, signal });
 }
 
-function initScrollState() {
+function initScrollState(signal: AbortSignal) {
   let scrollTimer: number | undefined;
 
   const markScrolling = () => {
@@ -200,14 +359,25 @@ function initScrollState() {
     }, 140);
   };
 
-  window.addEventListener('scroll', markScrolling, { passive: true });
-  window.addEventListener('wheel', markScrolling, { passive: true });
-  window.addEventListener('touchmove', markScrolling, { passive: true });
+  window.addEventListener('scroll', markScrolling, { passive: true, signal });
+  window.addEventListener('wheel', markScrolling, { passive: true, signal });
+  window.addEventListener('touchmove', markScrolling, { passive: true, signal });
 }
 
-if (!window.__t3rmEnhancementsInit__) {
-  window.__t3rmEnhancementsInit__ = true;
-  initPretext();
-  initHaptics();
-  initScrollState();
+function setupEnhancementsForPage() {
+  window.__t3rmEnhancementsAbort__?.abort();
+
+  const controller = new AbortController();
+  window.__t3rmEnhancementsAbort__ = controller;
+
+  initPretext(controller.signal);
+  initHaptics(controller.signal);
+  initScrollState(controller.signal);
 }
+
+if (!window.__t3rmEnhancementsPageLoadBound__) {
+  window.__t3rmEnhancementsPageLoadBound__ = true;
+  document.addEventListener('astro:page-load', setupEnhancementsForPage);
+}
+
+setupEnhancementsForPage();

@@ -29,7 +29,7 @@ const nextYear = currentYear + 1;
       <kbd id="k7">&#8594;</kbd>
       <kbd id="k8">b</kbd>
       <kbd id="k9">a</kbd>
-      <a id="lazy" class="no-style socials" data-haptic="medium">too lazy?</a>
+      <a id="lazy" class="no-style socials" data-haptic="buzz" data-pretext-fit>too lazy?</a>
     </div>
   </div>
 </footer>
@@ -37,8 +37,12 @@ const nextYear = currentYear + 1;
 <script is:inline>
   (() => {
     const chars = " .'`^\",:;Il!i><~+_-?][}{1)(|\\\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$";
-    const words = ["SYSTEM", "SIGNAL", "MEOW", "VOID", "NULL", "UNDEFINED", "ERROR", "404", "CRT", "TERMINAL"];
+    const hoverWord = "t3rm1n4l";
     const setups = new WeakMap();
+
+    const getTargetChar = (row, col) => {
+      return hoverWord[(row + col) % hoverWord.length];
+    };
 
     function setupFooter(footer) {
       if (!footer || setups.has(footer)) {
@@ -57,6 +61,8 @@ const nextYear = currentYear + 1;
         rows: 0,
         cols: 0,
         interval: null,
+        hoverRow: null,
+        hoverCol: null,
       };
 
       const buildGrid = () => {
@@ -74,7 +80,8 @@ const nextYear = currentYear + 1;
           Number.isFinite(lineHeightFromPretext) ? lineHeightFromPretext : fallbackLineHeight
         );
         const muralWidth = Math.max(0, muralEl?.clientWidth || footer.clientWidth || 0);
-        state.cols = Math.max(24, Math.ceil((muralWidth + 192) / charWidth));
+        const effectiveCharWidth = Math.max(1, charWidth * 0.9);
+        state.cols = Math.max(40, Math.ceil((muralWidth + 640) / effectiveCharWidth));
         const muralHeight = Math.max(0, muralEl?.clientHeight || footer.clientHeight || 0);
         state.rows = Math.max(14, Math.ceil((muralHeight / lineHeight) + 6));
         state.grid = Array.from({ length: state.rows }, () =>
@@ -96,12 +103,23 @@ const nextYear = currentYear + 1;
           state.grid[row][col] = chars[Math.floor(Math.random() * chars.length)];
         }
 
-        if (Math.random() > 0.84) {
-          const word = words[Math.floor(Math.random() * words.length)];
-          const row = Math.floor(Math.random() * state.rows);
-          const start = Math.max(0, Math.floor(Math.random() * Math.max(1, state.cols - word.length)));
-          for (let i = 0; i < word.length && start + i < state.cols; i++) {
-            state.grid[row][start + i] = word[i];
+        if (typeof state.hoverRow === "number" && typeof state.hoverCol === "number") {
+          for (let rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            const row = state.hoverRow + rowOffset;
+            if (row < 0 || row >= state.rows) {
+              continue;
+            }
+
+            const strength = rowOffset === 0 ? 0.92 : 0.5;
+            const spread = Math.max(4, Math.floor(hoverWord.length * 0.75));
+            const start = Math.max(0, state.hoverCol - spread);
+            const end = Math.min(state.cols - 1, state.hoverCol + spread);
+
+            for (let col = start; col <= end; col++) {
+              if (Math.random() < strength) {
+                state.grid[row][col] = getTargetChar(row, col);
+              }
+            }
           }
         }
 
@@ -114,10 +132,18 @@ const nextYear = currentYear + 1;
         const y = Math.max(0, Math.min(event.clientY - rect.top, rect.height));
         footer.style.setProperty("--ascii-hover-x", `${x}px`);
         footer.style.setProperty("--ascii-hover-y", `${y}px`);
+
+        const col = Math.floor((x / Math.max(rect.width, 1)) * state.cols);
+        const row = Math.floor((y / Math.max(rect.height, 1)) * state.rows);
+        state.hoverCol = Math.max(0, Math.min(state.cols - 1, col));
+        state.hoverRow = Math.max(0, Math.min(state.rows - 1, row));
+
         footer.classList.add("ascii-hovering");
       };
 
       const handleLeave = () => {
+        state.hoverRow = null;
+        state.hoverCol = null;
         footer.classList.remove("ascii-hovering");
       };
 
@@ -175,6 +201,7 @@ const nextYear = currentYear + 1;
     --ascii-hover-x: 50%;
     --ascii-hover-y: 50%;
     --ascii-bleed: clamp(28px, 7vw, 56px);
+    --ascii-lift: clamp(8px, 1.8vw, 14px);
     overflow: hidden;
     background: oklch(var(--base));
   }
@@ -202,19 +229,37 @@ const nextYear = currentYear + 1;
 
   .footer-mural {
     position: absolute;
-    top: calc(-1 * var(--ascii-bleed));
-    right: 0;
+    top: calc(-1 * var(--ascii-lift));
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    right: auto;
     bottom: 0;
-    left: 0;
     overflow: hidden;
     pointer-events: none;
     user-select: none;
     mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      rgb(0 0 0 / 0.1) calc(var(--ascii-bleed) * 0.35),
-      rgb(0 0 0 / 0.42) calc(var(--ascii-bleed) * 0.78),
-      black calc(var(--ascii-bleed) + 18px),
+      rgb(0 0 0 / 0.03) 3%,
+      rgb(0 0 0 / 0.1) 7%,
+      rgb(0 0 0 / 0.22) 12%,
+      rgb(0 0 0 / 0.4) 17%,
+      rgb(0 0 0 / 0.62) 22%,
+      rgb(0 0 0 / 0.82) 26%,
+      black 29%,
+      black 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgb(0 0 0 / 0.03) 3%,
+      rgb(0 0 0 / 0.1) 7%,
+      rgb(0 0 0 / 0.22) 12%,
+      rgb(0 0 0 / 0.4) 17%,
+      rgb(0 0 0 / 0.62) 22%,
+      rgb(0 0 0 / 0.82) 26%,
+      black 29%,
       black 100%
     );
     z-index: 0;
