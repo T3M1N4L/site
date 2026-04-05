@@ -81,7 +81,7 @@ const nextYear = currentYear + 1;
         );
         const muralWidth = Math.max(0, muralEl?.clientWidth || footer.clientWidth || 0);
         const effectiveCharWidth = Math.max(1, charWidth * 0.9);
-        state.cols = Math.max(40, Math.ceil((muralWidth + 640) / effectiveCharWidth));
+        state.cols = Math.max(40, Math.ceil((muralWidth + 96) / effectiveCharWidth));
         const muralHeight = Math.max(0, muralEl?.clientHeight || footer.clientHeight || 0);
         state.rows = Math.max(14, Math.ceil((muralHeight / lineHeight) + 6));
         state.grid = Array.from({ length: state.rows }, () =>
