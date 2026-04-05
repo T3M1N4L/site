@@ -87,6 +87,25 @@ function lockPretextMetrics() {
     const height = Math.ceil(measureWrappedHeight(text, getFontShorthand(style), contentWidth, lineHeight));
     element.style.setProperty('--pretext-block-size', `${height}px`);
   });
+
+  document.querySelectorAll<HTMLElement>('[data-pretext-ascii]').forEach((element) => {
+    const sample = (element.dataset.pretextSample ?? 'MMMMMMMMMM').trim();
+    if (!sample) {
+      return;
+    }
+
+    const style = getComputedStyle(element);
+    const font = getFontShorthand(style);
+    const charWidth = measureNaturalWidth(sample, font) / sample.length;
+    const lineHeight = Number.parseFloat(style.lineHeight) || Number.parseFloat(style.fontSize) * 1.2;
+
+    if (!Number.isFinite(charWidth) || !Number.isFinite(lineHeight)) {
+      return;
+    }
+
+    element.style.setProperty('--ascii-char-width', `${Math.max(4, charWidth)}px`);
+    element.style.setProperty('--ascii-line-height', `${Math.max(8, lineHeight)}px`);
+  });
 }
 
 function queuePretextMetrics() {
@@ -108,10 +127,19 @@ function getHaptics() {
 }
 
 function initHaptics() {
+  const hapticSelector = [
+    '[data-haptic]',
+    'button',
+    '[role="button"]',
+    'input[type="button"]',
+    'input[type="submit"]',
+    'input[type="reset"]',
+  ].join(', ');
+
   document.addEventListener(
     'pointerdown',
     (event) => {
-      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[data-haptic]') : null;
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>(hapticSelector) : null;
       if (!target) {
         return;
       }
@@ -158,7 +186,7 @@ function initPretext() {
 }
 
 function initScrollState() {
-  let scrollTimer: ReturnType<typeof setTimeout> | undefined;
+  let scrollTimer: number | undefined;
 
   const markScrolling = () => {
     document.body.classList.add('is-scrolling');

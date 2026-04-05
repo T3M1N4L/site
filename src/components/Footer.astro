@@ -6,7 +6,7 @@ const nextYear = currentYear + 1;
 
 <footer class="site-footer" data-ascii-footer>
   <div class="footer-mural" aria-hidden="true">
-    <pre class="ascii-layer ascii-base" data-ascii-base></pre>
+    <pre class="ascii-layer ascii-base" data-ascii-base data-pretext-ascii data-pretext-sample="MMMMMMMMMM"></pre>
     <pre class="ascii-layer ascii-glow" data-ascii-glow></pre>
     <div class="ascii-hover-glow"></div>
   </div>
@@ -29,7 +29,7 @@ const nextYear = currentYear + 1;
       <kbd id="k7">&#8594;</kbd>
       <kbd id="k8">b</kbd>
       <kbd id="k9">a</kbd>
-      <a id="lazy" class="no-style socials">too lazy?</a>
+      <a id="lazy" class="no-style socials" data-haptic="medium">too lazy?</a>
     </div>
   </div>
 </footer>
@@ -61,33 +61,18 @@ const nextYear = currentYear + 1;
 
       const buildGrid = () => {
         const style = getComputedStyle(baseEl);
-        const measuredChar = (() => {
-          const canvas = document.createElement("canvas");
-          const ctx = canvas.getContext("2d");
-          if (!ctx) {
-            return 0;
-          }
-          ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-          return ctx.measureText("M").width;
-        })();
-        const domChar = (() => {
-          const probe = document.createElement("span");
-          probe.textContent = "0000000000";
-          probe.style.position = "absolute";
-          probe.style.visibility = "hidden";
-          probe.style.pointerEvents = "none";
-          probe.style.whiteSpace = "pre";
-          probe.style.fontFamily = style.fontFamily;
-          probe.style.fontSize = style.fontSize;
-          probe.style.fontWeight = style.fontWeight;
-          probe.style.letterSpacing = style.letterSpacing;
-          (muralEl || footer).appendChild(probe);
-          const width = probe.getBoundingClientRect().width / 10;
-          probe.remove();
-          return width;
-        })();
-        const charWidth = Math.max(4, (domChar || measuredChar || parseFloat(style.fontSize) * 0.62 || 7) * 0.92);
-        const lineHeight = Math.max(10, parseFloat(style.lineHeight) || 12);
+        const charWidthFromPretext = Number.parseFloat(style.getPropertyValue("--ascii-char-width"));
+        const lineHeightFromPretext = Number.parseFloat(style.getPropertyValue("--ascii-line-height"));
+        const fallbackCharWidth = parseFloat(style.fontSize) * 0.62 || 7;
+        const fallbackLineHeight = parseFloat(style.lineHeight) || 12;
+        const charWidth = Math.max(
+          4,
+          (Number.isFinite(charWidthFromPretext) ? charWidthFromPretext : fallbackCharWidth) * 0.92
+        );
+        const lineHeight = Math.max(
+          10,
+          Number.isFinite(lineHeightFromPretext) ? lineHeightFromPretext : fallbackLineHeight
+        );
         const muralWidth = Math.max(0, muralEl?.clientWidth || footer.clientWidth || 0);
         state.cols = Math.max(24, Math.ceil((muralWidth + 192) / charWidth));
         const muralHeight = Math.max(0, muralEl?.clientHeight || footer.clientHeight || 0);
@@ -189,6 +174,7 @@ const nextYear = currentYear + 1;
     position: relative;
     --ascii-hover-x: 50%;
     --ascii-hover-y: 50%;
+    --ascii-bleed: clamp(28px, 7vw, 56px);
     overflow: hidden;
     background: oklch(var(--base));
   }
@@ -216,7 +202,7 @@ const nextYear = currentYear + 1;
 
   .footer-mural {
     position: absolute;
-    top: -32px;
+    top: calc(-1 * var(--ascii-bleed));
     right: 0;
     bottom: 0;
     left: 0;
@@ -226,9 +212,9 @@ const nextYear = currentYear + 1;
     mask-image: linear-gradient(
       to bottom,
       transparent 0%,
-      rgb(0 0 0 / 0.12) 12%,
-      rgb(0 0 0 / 0.45) 28%,
-      black 52%,
+      rgb(0 0 0 / 0.1) calc(var(--ascii-bleed) * 0.35),
+      rgb(0 0 0 / 0.42) calc(var(--ascii-bleed) * 0.78),
+      black calc(var(--ascii-bleed) + 18px),
       black 100%
     );
     z-index: 0;
@@ -312,6 +298,10 @@ const nextYear = currentYear + 1;
   }
 
   @media (max-width: 700px) {
+    .site-footer {
+      --ascii-bleed: clamp(40px, 12vw, 76px);
+    }
+
     .footer-content {
       align-items: flex-start;
     }
