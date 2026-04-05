@@ -5,12 +5,16 @@
   export let pokemon: string = "gengar";
 
   let pokemonEl: HTMLImageElement;
+  let shinyOverlayEl: HTMLImageElement;
   let collisionEl: HTMLDivElement;
   let bubbleEl: HTMLImageElement;
   let pokeballEl: HTMLDivElement;
   let pokemonInstance: PokemonType | null = null;
   let animationInterval: ReturnType<typeof setInterval>;
   let spawned = false;
+  const SHINY_ODDS = 100;
+  let isShiny = false;
+  let spritePrefix: "default" | "shiny" = "default";
 
   const POKEMON_SIZE = 48;
 
@@ -38,6 +42,11 @@
   }
 
   onMount(() => {
+    isShiny = Math.floor(Math.random() * SHINY_ODDS) === 0;
+    spritePrefix = isShiny ? "shiny" : "default";
+    pokemonEl.src = `/pokemon/${pokemon}/${spritePrefix}_idle_8fps.gif`;
+    pokemonEl.alt = isShiny ? `shiny ${pokemon}` : pokemon;
+
     // Small delay to ensure container is rendered with proper dimensions
     setTimeout(() => {
       pokemonInstance = new PokemonType(
@@ -48,6 +57,7 @@
         0,
         POKEMON_SIZE,
         pokemon,
+        spritePrefix,
       );
 
       // Start pokeball animation
@@ -60,6 +70,9 @@
           spawned = true;
           pokemonEl.classList.add("spawn-pop");
           pokemonEl.style.opacity = "1";
+          if (isShiny) {
+            shinyOverlayEl.classList.add("active");
+          }
         }
       }, spawnDelay);
 
@@ -72,6 +85,9 @@
           spawned = true;
           pokemonEl.classList.add("spawn-pop");
           pokemonEl.style.opacity = "1";
+          if (isShiny) {
+            shinyOverlayEl.classList.add("active");
+          }
         }
       });
 
@@ -102,10 +118,18 @@
 
 <img
   bind:this={pokemonEl}
-  src={`/pokemon/${pokemon}/default_idle_8fps.gif`}
-  alt={pokemon}
+  src={`/pokemon/${pokemon}/${spritePrefix}_idle_8fps.gif`}
+  alt={isShiny ? `shiny ${pokemon}` : pokemon}
   class="pokemon-sprite"
   style="opacity: 0;"
+/>
+
+<img
+  bind:this={shinyOverlayEl}
+  src="/pokemon/shiny-anim.gif"
+  alt=""
+  aria-hidden="true"
+  class="shiny-overlay"
 />
 
 <div bind:this={collisionEl} class="collision"></div>
@@ -143,11 +167,29 @@
     position: absolute;
     bottom: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 9998;
     user-select: none;
     pointer-events: none;
     image-rendering: pixelated;
     image-rendering: crisp-edges;
+  }
+
+  .shiny-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    z-index: 9999;
+    pointer-events: none;
+    user-select: none;
+    image-rendering: pixelated;
+    mix-blend-mode: screen;
+    opacity: 0;
+  }
+
+  .shiny-overlay:global(.active) {
+    animation: shiny-sparkle 1s ease-out forwards;
   }
 
   .pokemon-sprite:global(.spawn-pop) {
@@ -188,11 +230,34 @@
 
   .bubble {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 26px;
+    height: 26px;
+    transform: translateX(-50%) scale(0.92);
+    transform-origin: center bottom;
     z-index: 9998;
     user-select: none;
     pointer-events: none;
     display: none;
+  }
+
+  @keyframes shiny-sparkle {
+    0% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    15% {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    30% {
+      transform: scale(1);
+    }
+    80% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.1);
+    }
   }
 </style>

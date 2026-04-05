@@ -5,7 +5,8 @@ import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import ThemeScript from '../components/ThemeScript.astro';
 import ErudaLoader from '../components/ErudaLoader.astro';
-import { colors, getNextInObj } from '../utils/colors';
+import ClientEnhancements from '../components/ClientEnhancements.astro';
+import { colors } from '../utils/colors';
 import '../styles/global.scss';
 import type { MarkdownLayoutProps } from 'astro';
 
@@ -22,9 +23,6 @@ const {
   color = frontmatter.color || 'lavender'
 } = Astro.props;
 
-const colorValue = colors[color as keyof typeof colors] || colors.lavender;
-const color2Name = getNextInObj(colors, color as keyof typeof colors);
-const color2Value = colors[color2Name];
 ---
 
 <!DOCTYPE html>
@@ -32,7 +30,7 @@ const color2Value = colors[color2Name];
   <head>
     <ClientRouter />
     <BaseHead title={title} description={description} color={color} />
-    <style is:inline set:html={`:root{--color:var(--${color});--color2:var(--${color2Name})}`}>
+    <style is:inline set:html={`:root{--color:var(--${color})}`}>
     </style>
   </head>
   <body>
@@ -51,8 +49,9 @@ const color2Value = colors[color2Name];
     
     <Footer />
     
-    <script is:inline src="/konami.js"></script>
-    <script is:inline src="/oneko.js"></script>
+    <ClientEnhancements />
+    <script is:inline defer src="/konami.js"></script>
+    <script is:inline defer src="/oneko.js"></script>
     <ErudaLoader />
   </body>
 </html>

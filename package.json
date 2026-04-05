@@ -1,6 +1,6 @@
 {
   "name": "t3rm-site",
-  "version": "6.0.0",
+  "version": "7.0.0",
   "type": "module",
   "scripts": {
     "dev": "astro dev",
@@ -12,15 +12,17 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/svelte": "^7.2.5",
-    "@iconify/svelte": "^5.2.1",
+    "@chenglou/pretext": "^0.0.4",
     "@iconify-json/fa7-brands": "^1.2.1",
     "@iconify-json/material-symbols": "^1.2.53",
+    "@iconify/svelte": "^5.2.1",
     "astro": "^5.16.15",
     "astro-icon": "^1.1.5",
     "eruda": "^3.4.3",
     "node-emoji": "^2.2.0",
     "sass": "^1.97.3",
-    "twemoji": "^14.0.2"
+    "twemoji": "^14.0.2",
+    "web-haptics": "^0.0.6"
   },
   "devDependencies": {
     "typescript": "^5.5.4",

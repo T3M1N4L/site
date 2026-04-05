@@ -24,6 +24,7 @@ export class PokemonType implements IPokemon {
   private _speed: number = 2;
   private _width: number;
   private _pokemonName: string;
+  private _spritePrefix: 'default' | 'shiny';
 
   sequence: ISequenceState[] = [
     {
@@ -48,6 +49,7 @@ export class PokemonType implements IPokemon {
     bottom: number,
     width: number,
     pokemonName: string = 'gengar',
+    spritePrefix: 'default' | 'shiny' = 'default',
   ) {
     this.el = spriteElement;
     this.collision = collisionElement;
@@ -56,6 +58,7 @@ export class PokemonType implements IPokemon {
     this._bottom = bottom;
     this._width = width;
     this._pokemonName = pokemonName;
+    this._spritePrefix = spritePrefix;
 
     this.initSprite(left, width);
 
@@ -72,7 +75,7 @@ export class PokemonType implements IPokemon {
     this.collision.style.width = `${width}px`;
     this.collision.style.height = `${width}px`;
 
-    this.speech.style.left = `${left}px`;
+    this.speech.style.left = `${left + width / 2}px`;
     this.speech.style.bottom = `${width}px`;
     this.speech.style.display = 'none';
   }
@@ -110,7 +113,7 @@ export class PokemonType implements IPokemon {
     this._left = Math.max(0, Math.min(left, maxLeft));
     this.el.style.left = `${this._left}px`;
     this.collision.style.left = `${this._left}px`;
-    this.speech.style.left = `${this._left}px`;
+    this.speech.style.left = `${this._left + this._width / 2}px`;
   }
 
   positionBottom(bottom: number): void {
@@ -128,8 +131,8 @@ export class PokemonType implements IPokemon {
   setAnimation(spriteLabel: string) {
     const filename =
       spriteLabel === 'idle'
-        ? 'default_idle_8fps.gif'
-        : 'default_walk_8fps.gif';
+        ? `${this._spritePrefix}_idle_8fps.gif`
+        : `${this._spritePrefix}_walk_8fps.gif`;
 
     // Only update if different to avoid restarting the GIF
     if (this.el.src.includes(filename)) {

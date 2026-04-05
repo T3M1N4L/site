@@ -179,7 +179,7 @@ svg * {
   transition: all 0.5s var(--bounce);
   transform-origin: center;
   cursor: pointer;
-  
+
   &:hover {
     transform: scale(1.05) perspective(1000px) rotateX(25deg);
     background: oklch(var(--surface0) / 0.5);
@@ -188,6 +188,20 @@ svg * {
       0 10px 25px oklch(var(--surface0) / 0.3),
       0 5px 15px oklch(var(--lavender) / 0.2);
   }
+}
+
+[data-pretext-fit] {
+  min-width: var(--pretext-inline-size, auto);
+}
+
+[data-pretext-height] {
+  min-height: var(--pretext-block-size, auto);
+}
+
+#age[data-pretext-fit] {
+  display: inline-block;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
 .blur {
@@ -217,11 +231,7 @@ nav {
   will-change: transform;
   transform: translateZ(0);
 
-  background: linear-gradient(
-    90deg,
-    oklch(var(--color) / 0.02),
-    oklch(var(--color2) / 0.02)
-  );
+  background: oklch(var(--base));
 
   &::after {
     content: "";
@@ -262,15 +272,12 @@ nav {
 }
 
 footer {
+  position: relative;
   margin-top: 50px;
   padding: 2rem 0;
   will-change: transform;
   transform: translateZ(0);
-  background: linear-gradient(
-    90deg,
-    oklch(var(--color) / 0.02),
-    oklch(var(--color2) / 0.02)
-  );
+  background: oklch(var(--base));
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
@@ -826,48 +833,79 @@ progress {
   }
 }
 
-.retro {
-  &::before {
-    content: " ";
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background:
-      linear-gradient(
-        oklch(17.55% 0.0033 17.47 / 0) 50%,
-        oklch(0% 0 0 / 0.25) 50%
-      ),
-      linear-gradient(
-        90deg,
-        oklch(62.8% 0.2577 29.23 / 0.06),
-        oklch(86.64% 0.294827 142.4953 / 0.02),
-        oklch(45.2% 0.313214 264.052 / 0.06)
-      );
-    z-index: 999;
-    background-size:
-      100% 2px,
-      3px 100%;
-    pointer-events: none;
+body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background:
+    linear-gradient(
+      oklch(17.55% 0.0033 17.47 / 0) 50%,
+      oklch(0% 0 0 / 0.25) 50%
+    ),
+    linear-gradient(
+      90deg,
+      oklch(62.8% 0.2577 29.23 / 0.06),
+      oklch(86.64% 0.294827 142.4953 / 0.02),
+      oklch(45.2% 0.313214 264.052 / 0.06)
+    );
+  z-index: 999;
+  background-size:
+    100% 2px,
+    3px 100%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scaleY(1.035);
+  transform-origin: center;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  animation: scan 3s linear infinite;
+  animation-play-state: paused;
+}
 
-    animation: scan 3s linear infinite;
-  }
-  &::after {
-    content: " ";
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background: oklch(17.55% 0.0033 17.47 / 0.1);
-    opacity: 0;
-    z-index: 999;
-    pointer-events: none;
-    animation: flicker 0.15s infinite;
-  }
+body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: oklch(17.55% 0.0033 17.47 / 0.1);
+  opacity: 0;
+  z-index: 999;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+  animation: flicker 0.15s infinite;
+  animation-play-state: paused;
+}
+
+body.retro::before,
+body.retro-entering::before,
+body.retro-exiting::before {
+  opacity: 1;
+  transform: scaleY(1);
+  animation-play-state: running;
+}
+
+body.retro::after,
+body.retro-entering::after,
+body.retro-exiting::after {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+body.retro-exiting::before {
+  opacity: 0;
+  transform: scaleY(1.02);
+}
+
+body.retro-exiting::after {
+  opacity: 0;
 }
 blink {
   animation: blink 0.001s infinite alternate;

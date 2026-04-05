@@ -4,6 +4,7 @@
 <script>
   let typedKeys = '';
   let isErudaLoaded = false;
+  let erudaLoaderPromise;
 
   document.addEventListener('keydown', (event) => {
     if (event.key.length === 1 && event.key.match(/[a-z]/i)) {
@@ -22,7 +23,26 @@
 
   async function loadEruda() {
     try {
-      const { default: eruda } = await import('eruda');
+      if (!erudaLoaderPromise) {
+        erudaLoaderPromise = new Promise((resolve, reject) => {
+          const existingScript = document.querySelector('script[data-eruda-loader="true"]');
+          if (existingScript) {
+            existingScript.addEventListener('load', () => resolve(window.eruda), { once: true });
+            existingScript.addEventListener('error', reject, { once: true });
+            return;
+          }
+
+          const script = document.createElement('script');
+          script.src = 'https://cdn.jsdelivr.net/npm/eruda';
+          script.async = true;
+          script.dataset.erudaLoader = 'true';
+          script.addEventListener('load', () => resolve(window.eruda), { once: true });
+          script.addEventListener('error', reject, { once: true });
+          document.head.append(script);
+        });
+      }
+
+      const eruda = await erudaLoaderPromise;
       
       eruda.init({
         defaults: {

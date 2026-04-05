@@ -33,12 +33,13 @@ bun run build
 this is astro ssr btw for faster load times
 ### Notes
 - Standard astro layout
-- 
+- Pretext?!
+- Pokemon, shinies are 1/100
+- awesome animations
+- haptics?!
 - Images are stored in `public/img`
 
 ### Roadmap
 - [ ] better center gradient for the wavy `t3rm1n4l`
 - [ ] clean up code especially css 
-- [ ] remove socials page and integrate it into main page
-- [ ] background effects
-- [ ] astro transitions
+- [ ] make the overlapping stuff begone!

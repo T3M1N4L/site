@@ -10,7 +10,7 @@ export const colorToPokemon: Record<string, string> = {
   yellow: 'jirachi',
   green: 'rayquaza',
   teal: 'tyranitar',
-  sky: 'suicune', // Greninja not available, using Suicune
+  sky: 'blastoise',
   sapphire: 'garchomp',
   blue: 'blastoise',
   lavender: 'gengar',

@@ -19,7 +19,7 @@ const commitHashShort = gitInfo.commitHash ? gitInfo.commitHash.slice(0,7) : '';
 
 const navigationHtml = navItems.map(({ title, link, emoji }) => {
   const parsedEmoji = parseEmojis(emoji);
-  return `<a href="${link}" class="no-style"><button>${parsedEmoji} ${title}</button></a>`;
+  return `<a href="${link}" class="no-style" data-haptic="selection"><button>${parsedEmoji} ${title}</button></a>`;
 }).join('');
 ---
 
@@ -32,13 +32,13 @@ const navigationHtml = navItems.map(({ title, link, emoji }) => {
       <br/>
       <small><a href={`https://github.com/T3M1N4L/site/commit/${gitInfo.commitHash}`}>{commitHashShort}</a> - {gitInfo.commitMessage}</small><br/>
       <yescript>
-        <button onclick="toggleUwU()">
+        <button onclick="toggleUwU()" data-haptic="selection" data-pretext-fit>
           uwu mode
         </button>
-        <button onclick="toggleMonospace()">
+        <button onclick="toggleMonospace()" data-haptic="selection" data-pretext-fit>
           monospace mode
         </button>
-        <button onclick="toggleNormal()">
+        <button onclick="toggleNormal()" data-haptic="selection" data-pretext-fit>
           normal
         </button>
       </yescript>
