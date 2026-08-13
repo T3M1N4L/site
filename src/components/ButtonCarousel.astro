@@ -77,7 +77,6 @@ const { buttons } = Astro.props;
   }
 
   .web-button {
-    display: inline-block;
     padding: 0.5rem 1rem;
     background: oklch(var(--base));
     color: oklch(var(--text));
@@ -88,7 +87,7 @@ const { buttons } = Astro.props;
     white-space: nowrap;
     border: 1px solid oklch(var(--surface1) / 0.5);
     min-height: 31px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -100,15 +99,6 @@ const { buttons } = Astro.props;
   .web-button:hover {
     transform: scale(1.05);
     z-index: 5;
-  }
-
-  @keyframes groove {
-    0% {
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(max(7.75px, 0.625rem));
-    }
   }
 
   .fade-left,
@@ -133,7 +123,8 @@ const { buttons } = Astro.props;
 
   @media (prefers-reduced-motion: reduce) {
     .button-row,
-    .web-button {
+    .web-button,
+    .button-wrapper {
       animation: none;
     }
   }

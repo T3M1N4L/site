@@ -14,6 +14,8 @@ const {
 } = Astro.props;
 
 const colorValue = colors[color as keyof typeof colors] || colors.lavender;
+const fullTitle = title && title !== 'Home' ? `${title} | t3rm1n4l` : 't3rm1n4l';
+const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://t3rm1n4l.dev');
 ---
 
 <meta charset="UTF-8" />
@@ -24,18 +26,38 @@ const colorValue = colors[color as keyof typeof colors] || colors.lavender;
 <meta name="apple-mobile-web-app-title" content="t3rm1n4l" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta property="og:image" content="/img/cat.png"/>
+<link rel="canonical" href={canonicalURL} />
 
-<title>{title && title !== 'Home' ? `${title} | t3rm1n4l` : 't3rm1n4l'}</title>
+<title>{fullTitle}</title>
 
 <meta name="theme-color" content={colorValue} />
 <meta name="description" content={description} />
-<meta name="language" content="English">
-<meta name="robots" content="noarchive">
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content="/img/cat.png" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content={canonicalURL} />
+<meta property="twitter:title" content={fullTitle} />
+<meta property="twitter:description" content={description} />
+<meta property="twitter:image" content="/img/cat.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
 <link rel="preconnect" href="https://fonts.t3rm1n4l.dev" crossorigin="anonymous" />
-<link rel="preload" href="https://fonts.t3rm1n4l.dev/fonts.css" as="style"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://fonts.t3rm1n4l.dev/fonts.css"/>
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin="anonymous" />
+<link rel="dns-prefetch" href="https://raw.githubusercontent.com" />
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" as="style" />
+<link rel="preload" href="https://fonts.t3rm1n4l.dev/fonts.css" as="style" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<link rel="stylesheet" href="https://fonts.t3rm1n4l.dev/fonts.css" media="print" onload="this.media='all'" />
+<noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.t3rm1n4l.dev/fonts.css" />
+</noscript>

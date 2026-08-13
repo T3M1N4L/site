@@ -9,6 +9,9 @@ export default defineConfig({
   adapter: cloudflare(),
   output: "server",
   integrations: [icon(), svelte()],
+  devToolbar: {
+    enabled: false,
+  },
   markdown: {
     remarkPlugins: [remarkEmoji],
   },

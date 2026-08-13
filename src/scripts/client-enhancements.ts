@@ -54,6 +54,7 @@ function measureWrappedHeight(text: string, font: string, width: number, lineHei
 }
 
 function lockPretextMetrics() {
+  const updates: Array<() => void> = [];
   const groupedElements = new Map<string, HTMLElement[]>();
   const groupedMaxWidth = new Map<string, number>();
 
@@ -72,7 +73,9 @@ function lockPretextMetrics() {
       Number.parseFloat(style.borderRightWidth);
 
     const width = Math.ceil(measureNaturalWidth(text, getFontShorthand(style)) + chrome + 1);
-    element.style.setProperty('--pretext-inline-size', `${width}px`);
+    updates.push(() => {
+      element.style.setProperty('--pretext-inline-size', `${width}px`);
+    });
 
     const group = element.dataset.pretextGroup?.trim();
     if (group) {
@@ -94,7 +97,9 @@ function lockPretextMetrics() {
     }
 
     elements.forEach((element) => {
-      element.style.setProperty('--pretext-inline-size', `${maxWidth}px`);
+      updates.push(() => {
+        element.style.setProperty('--pretext-inline-size', `${maxWidth}px`);
+      });
     });
   });
 
@@ -120,7 +125,9 @@ function lockPretextMetrics() {
     }
 
     const height = Math.ceil(measureWrappedHeight(text, getFontShorthand(style), contentWidth, lineHeight));
-    element.style.setProperty('--pretext-block-size', `${height}px`);
+    updates.push(() => {
+      element.style.setProperty('--pretext-block-size', `${height}px`);
+    });
   });
 
   document.querySelectorAll<HTMLElement>('[data-pretext-ascii]').forEach((element) => {
@@ -138,9 +145,15 @@ function lockPretextMetrics() {
       return;
     }
 
-    element.style.setProperty('--ascii-char-width', `${Math.max(4, charWidth)}px`);
-    element.style.setProperty('--ascii-line-height', `${Math.max(8, lineHeight)}px`);
+    updates.push(() => {
+      element.style.setProperty('--ascii-char-width', `${Math.max(4, charWidth)}px`);
+      element.style.setProperty('--ascii-line-height', `${Math.max(8, lineHeight)}px`);
+    });
   });
+
+  for (const applyUpdate of updates) {
+    applyUpdate();
+  }
 }
 
 function queuePretextMetrics() {
@@ -293,29 +306,23 @@ function initHaptics(signal: AbortSignal) {
     triggerHaptic(hapticTarget);
   };
 
-  document.addEventListener(
-    'pointerdown',
-    (event) => {
-      onHapticInput(event.target);
-    },
-    { capture: true, passive: true, signal }
-  );
-
-  document.addEventListener(
-    'touchstart',
-    (event) => {
-      onHapticInput(event.target);
-    },
-    { capture: true, passive: true, signal }
-  );
-
-  document.addEventListener(
-    'click',
-    (event) => {
-      onHapticInput(event.target);
-    },
-    { capture: true, passive: true, signal }
-  );
+  if ('PointerEvent' in window) {
+    document.addEventListener(
+      'pointerdown',
+      (event) => {
+        onHapticInput(event.target);
+      },
+      { capture: true, passive: true, signal }
+    );
+  } else {
+    document.addEventListener(
+      'touchstart',
+      (event) => {
+        onHapticInput(event.target);
+      },
+      { capture: true, passive: true, signal }
+    );
+  }
 }
 
 function initPretext(signal: AbortSignal) {

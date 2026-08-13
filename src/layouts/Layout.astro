@@ -36,16 +36,16 @@ const {
   <body>
     <ThemeScript />
     <noscript style="padding: 10px;text-align: center;">
-      <b>heads up! looks like you have JavaScript disabled... some parts of the site will be unavaliable to you.</b>
+      <b>heads up! looks like you have JavaScript disabled... some parts of the site will be unavailable to you.</b>
     </noscript>
     
     <Nav color={color} />
     
-    <div id="content">
+    <main id="content">
       <div class="inner">
         <slot />
       </div>
-    </div>
+    </main>
     
     <Footer />
     

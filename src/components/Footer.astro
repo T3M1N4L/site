@@ -83,7 +83,7 @@ const nextYear = currentYear + 1;
         const effectiveCharWidth = Math.max(1, charWidth * 0.9);
         state.cols = Math.max(40, Math.ceil((muralWidth + 96) / effectiveCharWidth));
         const muralHeight = Math.max(0, muralEl?.clientHeight || footer.clientHeight || 0);
-        state.rows = Math.max(14, Math.ceil((muralHeight / lineHeight) + 6));
+        state.rows = Math.max(16, Math.ceil((muralHeight + 48) / lineHeight) + 6);
         state.grid = Array.from({ length: state.rows }, () =>
           Array.from({ length: state.cols }, () => chars[Math.floor(Math.random() * chars.length)])
         );
@@ -153,7 +153,35 @@ const nextYear = currentYear + 1;
       };
 
       rebuild();
-      state.interval = window.setInterval(tick, 90);
+
+      const startTicking = () => {
+        if (!state.interval) {
+          state.interval = window.setInterval(tick, 90);
+        }
+      };
+
+      const stopTicking = () => {
+        if (state.interval) {
+          clearInterval(state.interval);
+          state.interval = null;
+        }
+      };
+
+      let observer = null;
+      if ("IntersectionObserver" in window) {
+        observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              startTicking();
+            } else {
+              stopTicking();
+            }
+          });
+        }, { threshold: 0.05 });
+        observer.observe(footer);
+      } else {
+        startTicking();
+      }
 
       footer.addEventListener("pointermove", updateHover);
       footer.addEventListener("pointerleave", handleLeave);
@@ -161,9 +189,8 @@ const nextYear = currentYear + 1;
 
       setups.set(footer, {
         teardown() {
-          if (state.interval) {
-            clearInterval(state.interval);
-          }
+          stopTicking();
+          observer?.disconnect();
           footer.removeEventListener("pointermove", updateHover);
           footer.removeEventListener("pointerleave", handleLeave);
           window.removeEventListener("resize", rebuild);
@@ -248,7 +275,8 @@ const nextYear = currentYear + 1;
       rgb(0 0 0 / 0.62) 22%,
       rgb(0 0 0 / 0.82) 26%,
       black 29%,
-      black 100%
+      black 88%,
+      transparent 100%
     );
     -webkit-mask-image: linear-gradient(
       to bottom,
@@ -260,7 +288,8 @@ const nextYear = currentYear + 1;
       rgb(0 0 0 / 0.62) 22%,
       rgb(0 0 0 / 0.82) 26%,
       black 29%,
-      black 100%
+      black 88%,
+      transparent 100%
     );
     z-index: 0;
   }
@@ -271,7 +300,8 @@ const nextYear = currentYear + 1;
 
   .ascii-layer {
     position: absolute;
-    inset-block: 0;
+    top: 0;
+    bottom: -32px;
     left: -48px;
     right: -48px;
     margin: 0;

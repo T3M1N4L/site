@@ -118,6 +118,11 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.addEventListener("keydown", handleKeydown);
     document.addEventListener("keyup", handleKeyup);
-    document.querySelector("#lazy").addEventListener("click", handleLazyButtonClick);
+    document.addEventListener("click", (e) => {
+        if (e.target instanceof Element && e.target.closest("#lazy")) {
+            handleLazyButtonClick(e);
+        }
+    });
+    document.addEventListener("astro:page-load", updateThemeClass);
     updateThemeClass();
 });

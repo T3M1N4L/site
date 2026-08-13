@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://t3rm1n4l.dev/sitemap-index.xml

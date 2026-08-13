@@ -31,7 +31,7 @@
   --bounce: cubic-bezier(0.175, 0.885, 0.32, 1.9);
   --bounce-weak: cubic-bezier(0.175, 0.885, 0.32, 1.5);
 
-  --monospace: "Iosevka Term Web", "Iosevka", monospace;
+  --monospace: "Iosevka Term Web", "Iosevka", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 
   --width: 950px;
 }
@@ -200,7 +200,7 @@ svg * {
 
 #age[data-pretext-fit] {
   display: inline-block;
-  text-align: right;
+  text-align: left;
   font-variant-numeric: tabular-nums;
 }
 
@@ -392,7 +392,8 @@ li & {
   }
 }
 
-button {
+button,
+.btn-like {
   cursor: crosshair;
   padding: 5px 7.5px;
   border-radius: 7.5px;
@@ -914,7 +915,7 @@ body.retro-exiting::after {
   opacity: 0;
 }
 blink {
-  animation: blink 0.001s infinite alternate;
+  animation: blink 1s infinite alternate;
 }
 @keyframes blink {
   0% {

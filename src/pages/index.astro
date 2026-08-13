@@ -55,24 +55,33 @@ const interestButtons = [
 
   <h2>about me</h2>
 
-  <p data-pretext-height>i'm a <code id="age" data-pretext-fit data-pretext-sample="88.888888888888888">14</code> year old fullstack dev who does (mostly) frontend projects...
-  i love css, web design, and making things look nice and clean, im perfecting my skills in oop. also, i try to make eveyerthing i have amoled (fully black) themed</p>
+  <p data-pretext-height>i'm a <code id="age" data-pretext-fit data-pretext-sample="15.000000000000000">15</code> year old fullstack dev who does (mostly) frontend projects...
+  i love css, web design, and making things look nice and clean, im perfecting my skills in oop. also, i try to make everything i have amoled (fully black) themed</p>
 
-  <script>
-    const BIRTH_TIMESTAMP = 1301324179000; 
-    
-    function updateAge() {
-      const ageEl = document.getElementById("age");
-      if (!ageEl) return;
-      
-      const now = Date.now();
-      const ageInYears = (now - BIRTH_TIMESTAMP) / (1000 * 60 * 60 * 24 * 365.25);
-      
-      ageEl.textContent = ageInYears.toFixed(15);
-    }
+  <script is:inline>
+    (() => {
+      const BIRTH_TIMESTAMP = 1301324179000; 
+      let intervalId = null;
 
-    updateAge();
-    setInterval(updateAge, 1);
+      function updateAge() {
+        const ageEl = document.getElementById("age");
+        if (!ageEl) return;
+        
+        const now = Date.now();
+        const ageInYears = (now - BIRTH_TIMESTAMP) / (1000 * 60 * 60 * 24 * 365.25);
+        
+        ageEl.textContent = ageInYears.toFixed(15);
+      }
+
+      function startAgeCounter() {
+        updateAge();
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(updateAge, 25);
+      }
+
+      startAgeCounter();
+      document.addEventListener("astro:page-load", startAgeCounter);
+    })();
   </script>
 
   <h2>interests & hobbies</h2>
@@ -125,7 +134,7 @@ const interestButtons = [
 
     <ProjectCard 
       title="amoled-github"
-      desc="a visually pleasing amoled theme for vscode with 9K+ downloads"
+      desc="a visually pleasing amoled theme for vscode with 13K+ downloads"
       link="https://marketplace.visualstudio.com/items?itemName=T3M1N4L.amoled-github"
       color="blue"
     />
